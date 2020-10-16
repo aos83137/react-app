@@ -1,26 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Hello from './Hello';
+import Profile  from './Profile';
+import ListEx from './ListEx';
 
 function App() {
+  const taro = {
+    name:'Taro',
+    age:'26',
+    love:'yume',
+  };
+
+  const yume = {
+    name:'Yume',
+    age:'26',
+    love:'yong',
+  };
+  const listData = ['foo','bar','baz'];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <div>
-          My app
-        </div>
-        <Hello></Hello>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>Component</p>
+      <ListEx data={listData}></ListEx>
+      <Hello name='Taro'></Hello>
+      <Profile data={taro}></Profile>
+      <Profile data={yume}></Profile>
     </div>
   );
 }

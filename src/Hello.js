@@ -5,12 +5,18 @@ import React from 'react';
 //     {className: 'hello'},
 //     'hello, world!'
 // )
-
-const Hello =()=>{
+// const CHildren2 = ()=>{
+//     return(
+//         <p>2: Hello, world!!</p>
+//     );
+// }
+// const Children3 = ()=> <p>3: Hello,, world!</p>;
+const Hello =(props)=>{
     return (
         <section className="box">
-            <h1>Message</h1>
-            <p className='hello'>Hello, world!!!</p>
+            {/* <CHildren2></CHildren2>
+            <Children3></Children3> */}
+            <p>Hello, my name is {props.name}.</p>
         </section>
     )
 }
