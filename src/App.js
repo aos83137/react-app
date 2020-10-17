@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 import Customer from './components/Customer';
+import { Table, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper  } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const customers = [
   {
@@ -28,19 +30,49 @@ const customers = [
     'job': '백수'
   }
 
-]
+];
+
+const useStyles = makeStyles({
+  root:{
+    width: '100%',
+    marginTop: 3,
+    overflowX: "auto",
+  },
+  table:{
+    minWidth: 1080
+  }
+});
 
 function App() {
+  const classes = useStyles();
+  
   return (
-    <div>
+    <Paper className={classes.root}>
       <p>Component</p>
-      {
-        customers.map( 
-          (text, index)=>
-              <Customer key={text.id} customers={text}></Customer>            
-        )
-      }
-    </div>
+
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>번호</TableCell>
+              <TableCell align="right">이미지</TableCell>
+              <TableCell align="right">이름</TableCell>
+              <TableCell align="right">생년월일</TableCell>
+              <TableCell align="right">성별</TableCell>
+              <TableCell align="right">직업</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              customers.map( 
+                (text, index)=>
+                    <Customer key={text.id} customers={text}></Customer>            
+              )
+            }
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
 
