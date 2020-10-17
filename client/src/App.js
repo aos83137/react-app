@@ -1,36 +1,8 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import './App.css';
 import Customer from './components/Customer';
 import { Table, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper  } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-const customers = [
-  {
-    'id': 1,
-    'image' : 'https://placeimg.com/64/64/1',
-    'name': '전용석',
-    'birthday' : '951211',
-    'gender':'남자',
-    'job': '엔지니어'
-  },
-  {
-    'id': 2,
-    'image' : 'https://placeimg.com/64/64/2',
-    'name': '유메농',
-    'birthday' : '950328',
-    'gender':'여자',
-    'job': '학생'
-  },
-  {
-    'id': 3,
-    'image' : 'https://placeimg.com/64/64/3',
-    'name': '코지마',
-    'birthday' : '950222',
-    'gender':'여자',
-    'job': '백수'
-  }
-
-];
 
 const useStyles = makeStyles({
   root:{
@@ -45,7 +17,26 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
-  
+  const [customers, setcustomers] = useState();
+
+  useEffect(() => {
+    callApi()
+      .then(res=>{
+        // console.log('res : ',res);
+        setcustomers(res)}
+      )
+      .catch(err=>console.log(err));
+    return () => {
+      callApi();
+    }
+  }, [])
+
+  const callApi = async()=>{
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
   return (
     <Paper className={classes.root}>
       <p>Component</p>
@@ -63,11 +54,16 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {/* {customers?customers.map(
+              t=>{
+                console.log(t.name, t.id);
+              }
+            ):''} */}
             {
+              customers?
               customers.map( 
-                (text, index)=>
-                    <Customer key={text.id} customers={text}></Customer>            
-              )
+                d=><Customer key={d.id} customers={d}></Customer>)
+              :''
             }
           </TableBody>
         </Table>
