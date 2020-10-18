@@ -12,7 +12,8 @@ const useStyles = makeStyles({
   },
   table:{
     minWidth: 1080
-  }
+  },
+  
 });
 
 function App() {
@@ -39,8 +40,6 @@ function App() {
 
   return (
     <Paper className={classes.root}>
-      <p>Component</p>
-
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
