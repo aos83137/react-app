@@ -3,8 +3,9 @@ import './App.css';
 import Customer from './components/Customer';
 import { Table, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper  } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme)=>({
   root:{
     width: '100%',
     marginTop: 3,
@@ -13,19 +14,20 @@ const useStyles = makeStyles({
   table:{
     minWidth: 1080
   },
-  
-});
-
+  progress:{
+    display: 'flex',
+    '& > * + *': {
+      marginLeft: theme.spacing(2),
+    },
+  }
+}));
+ 
 function App() {
   const classes = useStyles();
-  const [customers, setcustomers] = useState();
-
+  const [customers, setCustomers] = useState();
   useEffect(() => {
     callApi()
-      .then(res=>{
-        // console.log('res : ',res);
-        setcustomers(res)}
-      )
+      .then(res=>{setCustomers(res)})
       .catch(err=>console.log(err));
     return () => {
       callApi();
@@ -53,16 +55,19 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {customers?customers.map(
-              t=>{
-                console.log(t.name, t.id);
-              }
-            ):''} */}
             {
               customers?
               customers.map( 
                 d=><Customer key={d.id} customers={d}></Customer>)
-              :''
+              :
+              <TableRow >
+                <TableCell colSpan="6" align="center">
+                <div className={classes.progress}>
+      <CircularProgress />
+      <CircularProgress color="secondary" />
+    </div>
+                </TableCell>
+              </TableRow>
             }
           </TableBody>
         </Table>
