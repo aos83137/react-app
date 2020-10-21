@@ -1,78 +1,99 @@
-import React,{useState,useEffect} from 'react';
-import './App.css';
-import Customer from './components/Customer';
-import { Table, TableBody,TableCell,TableContainer,TableHead,TableRow,Paper  } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { useState, useEffect, useCallback } from "react";
+import { TaskAdd, TaskDisplay } from "./components";
 
-const useStyles = makeStyles((theme)=>({
-  root:{
-    width: '100%',
-    marginTop: 3,
-    overflowX: "auto",
-  },
-  table:{
-    minWidth: 1080
-  },
-  progress:{
-    display: 'flex',
-    '& > * + *': {
-      marginLeft: theme.spacing(2),
-    },
-  }
-}));
- 
+import { firestore } from "./firebase";
+
 function App() {
-  const classes = useStyles();
-  const [customers, setCustomers] = useState();
-  useEffect(() => {
-    callApi()
-      .then(res=>{setCustomers(res)})
-      .catch(err=>console.log(err));
-    return () => {
-      callApi();
-    }
-  }, [])
+  const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState("");
+  const [modify, setModify] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const callApi = async()=>{
-    const response = await fetch('/api/customers');
-    const body = await response.json();
-    return body;
-  }
+  const fetchData = useCallback(() => {
+    let tasksData = [];
+    setLoading(true);
+    firestore
+      .collection("tasks")
+      .get()
+      .then((docs) => {
+        docs.forEach((doc) => {
+          console.log('doc',doc.data(), doc.id);
+          tasksData.push({ todo: doc.data().todo, id: doc.id });
+        });
+        setTasks((prevTasks) => prevTasks.concat(tasksData));
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const onClickHandler = (e) => {
+    e.preventDefault();
+    if (task !== "") {
+      firestore
+        .collection("tasks")
+        .add({ todo: task })
+        .then((res) => {
+          console.log(res);
+          setTasks((prevTasks) => tasks.concat({ todo: task, id: res.id }));
+        });
+      setTask("");
+    }
+  };
+
+  const onChangeHandler = (e) => {
+    setTask(e.target.value);
+  };
+
+  const removeHandler = (id) => {
+    firestore
+      .collection("tasks")
+      .doc(id)
+      .delete()
+      .then(() =>
+        setTasks((prevTasks) =>
+          prevTasks.filter((prevTask) => id !== prevTask.id)
+        )
+      );
+  };
+
+  const modifyHandler = (id) => {
+    return (e) => {
+      setTask("");
+      setModify(true);
+      e.target.innerText = modify ? "수정" : "완료";
+      if (task !== "" && modify) {
+        setTasks((prevTasks) =>
+          tasks.map((taskOne) =>
+            taskOne.id === id ? { ...taskOne, todo: task } : taskOne
+          )
+        );
+        setTask("");
+        setModify(false);
+      }
+    };
+  };
 
   return (
-    <Paper className={classes.root}>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>번호</TableCell>
-              <TableCell align="right">이미지</TableCell>
-              <TableCell align="right">이름</TableCell>
-              <TableCell align="right">생년월일</TableCell>
-              <TableCell align="right">성별</TableCell>
-              <TableCell align="right">직업</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              customers?
-              customers.map( 
-                d=><Customer key={d.id} customers={d}></Customer>)
-              :
-              <TableRow >
-                <TableCell colSpan="6" align="center">
-                  <div className={classes.progress}>
-                    <CircularProgress color="secondary" />
-                  </div>
-                </TableCell>
-              </TableRow>
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+    <div className="App">
+      <TaskAdd
+        task={task}
+        onClickHandler={onClickHandler}
+        onChangeHandler={onChangeHandler}
+        modify={modify}
+      />
+      {loading && <h1>Loading ...</h1>}
+      {!loading && (
+        <TaskDisplay
+          tasks={tasks}
+          removeHandler={removeHandler}
+          modifyHandler={modifyHandler}
+        />
+      )}
+    </div>
   );
 }
 
-export default App;
+export default React.memo(App);
