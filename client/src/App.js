@@ -62,10 +62,9 @@ function App() {
               :
               <TableRow >
                 <TableCell colSpan="6" align="center">
-                <div className={classes.progress}>
-      <CircularProgress />
-      <CircularProgress color="secondary" />
-    </div>
+                  <div className={classes.progress}>
+                    <CircularProgress color="secondary" />
+                  </div>
                 </TableCell>
               </TableRow>
             }
