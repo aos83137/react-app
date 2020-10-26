@@ -23,9 +23,11 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    useRouteMatch,
+    // useRouteMatch,
     Link
 } from 'react-router-dom';
+
+import { firestore } from "../firebase";
 
 const drawerWidth = 240;
 
