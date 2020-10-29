@@ -7,11 +7,15 @@ import {firestore} from "../firebase";
 const Board = () =>{
     const [tasks, setTasks] = useState([]);
     const [task, setTask] = useState("");
+    const [boards, setBoards] = useState([]);
+
     const [modify, setModify] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const fetchData = useCallback(() => {
         let tasksData = [];
+        let boardData = [];
+
         setLoading(true);
         firestore
           .collection("tasks")
@@ -22,8 +26,24 @@ const Board = () =>{
               tasksData.push({ todo: doc.data().todo, id: doc.id });
             });
             setTasks((prevTasks) => prevTasks.concat(tasksData));
-            setLoading(false);
           });
+
+        firestore
+          .collection("boards")
+          .get()
+          .then((docs) => {
+                docs.forEach((doc) =>{
+                    console.log('boards doc', doc.data());
+                    boardData.push({
+                        id:doc.id, 
+                        title:doc.data().title, 
+                        content: doc.data().content,
+                        whose:doc.data().whose,
+                    });
+                })
+                setBoards(boardData);
+                setLoading(false);
+          })
       }, []);
     useEffect(() => {
         fetchData();
@@ -90,7 +110,7 @@ const Board = () =>{
             {loading && <h1>Loading ...</h1>}
             {!loading && (
                 <TaskDisplay
-                tasks={tasks}
+                boards={boards}
                 removeHandler={removeHandler}
                 modifyHandler={modifyHandler}
                 />
