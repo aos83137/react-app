@@ -38,6 +38,7 @@ const Board = () =>{
                         id:doc.id, 
                         title:doc.data().title, 
                         content: doc.data().content,
+                        cardContent: doc.data().cardContent,
                         whose:doc.data().whose,
                     });
                 })
@@ -62,6 +63,13 @@ const Board = () =>{
         //     setTask("");
         // }
     };
+
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleExpandClick = (id) => {
+      setExpanded(!expanded);
+    };
+
 
     const onChangeHandler = (e) => {
         // setTask(e.target.value);

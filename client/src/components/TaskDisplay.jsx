@@ -9,36 +9,6 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-// const useBtnStyles = makeStyles((theme) => ({
-//   root: {
-//     display: "flex",
-//     flexDirection: "column",
-//     marginLeft: "1%",
-//     "& > *": {
-//       margin: theme.spacing(1),
-//     },
-//   },
-// }));
-
-// const useCardStyles = makeStyles({
-//   root: {
-//     "&+&": {//마진?
-//       marginTop: "10px",
-//     },
-//   },
-//   bullet: {
-//     display: "inline-block",
-//     margin: "0 2px",
-//     transform: "scale(0.8)",
-//   },
-//   title: {
-//     fontSize: 14,
-//   },
-//   pos: {
-//     marginBottom: 12,
-//   },
-// });
-
 const useStyles = makeStyles((theme) =>({
   root:{
     maxWidth: 1000,
@@ -132,9 +102,6 @@ const TaskDisplay = ({ boards, removeHandler, modifyHandler }) => {
               medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
               again without stirring, until mussels have opened and rice is just tender, 5 to 7
               minutes more. (Discard any mussels that don’t open.)
-            </Typography>
-            <Typography>
-              Set aside off of the heat to let rest for 10 minutes, and then serve.
             </Typography>
           </CardContent>
         </Collapse>
