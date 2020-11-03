@@ -11,10 +11,10 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const useStyles = makeStyles((theme) =>({
   root:{
-    maxWidth: 1000,
-    "&+&": {//마진?
-      marginTop: "10px",
-    },
+    minWidth:"580px",
+    maxWidth:"1080px",
+    margin:"auto",
+    marginBottom:theme.spacing(3),
   },
   media:{
     height:0,
@@ -36,8 +36,6 @@ const useStyles = makeStyles((theme) =>({
 }));
 
 const TaskDisplay = ({ boards, removeHandler, modifyHandler }) => {
-  // const btnClasses = useBtnStyles();
-  // const cardClasses = useCardStyles();
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -65,7 +63,7 @@ const TaskDisplay = ({ boards, removeHandler, modifyHandler }) => {
         />
         <CardMedia
           className={classes.media}
-          image="https://cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/XVPEGSXWHO257H4AOOOTOOAYRQ.jpg"
+          image={board.image}
           title="Paella dish"
         />
         <CardContent>

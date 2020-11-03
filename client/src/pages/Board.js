@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TaskAdd from '../components/TaskAdd';
 import TaskDisplay from '../components/TaskDisplay';
-
+import BoardAdd from '../components/BoardAdd';
 import {firestore} from "../firebase";
-
+import Grid from "@material-ui/core/Grid";
 const Board = () =>{
     // const [tasks, setTasks] = useState([]);
     const [task, setTask] = useState("");
+    const [board, setBoard] = useState({
+        title:"",
+        content:"",
+        image:"",
+        cardContent:"",
+    });
     const [boards, setBoards] = useState([]);
 
     const [modify, setModify] = useState(false);
@@ -15,28 +21,16 @@ const Board = () =>{
     const fetchData = useCallback(() => {
         // let tasksData = [];
         let boardData = [];
-
         setLoading(true);
-        // firestore
-        //   .collection("tasks")
-        //   .get()
-        //   .then((docs) => {
-        //     docs.forEach((doc) => {
-        //       console.log('doc',doc.data(), doc.id);
-        //       tasksData.push({ todo: doc.data().todo, id: doc.id });
-        //     });
-        //     setTasks((prevTasks) => prevTasks.concat(tasksData));
-        //   });
-
         firestore
           .collection("boards")
           .get()
           .then((docs) => {
                 docs.forEach((doc) =>{
-                    console.log('boards doc', doc.data());
                     boardData.push({
                         id:doc.id, 
-                        title:doc.data().title, 
+                        title:doc.data().title,
+                        image:doc.data().image, 
                         content: doc.data().content,
                         cardContent: doc.data().cardContent,
                         whose:doc.data().whose,
@@ -51,23 +45,65 @@ const Board = () =>{
         }, [fetchData]);
 
     const onClickHandler = (e) => {
-        e.preventDefault();
-        // if (task !== "") {
-        //     firestore
-        //     .collection("tasks")
-        //     .add({ todo: task })
-        //     .then((res) => {
-        //         console.log(res);
-        //         setTasks((prevTasks) => tasks.concat({ todo: task, id: res.id }));
-        //     });
-        //     setTask("");
-        // }
+        // e.preventDefault();
+        console.log('board',board);
+        if (board !== "") {
+            firestore
+            .collection("boards")
+            .add({ 
+                title:board.title,
+                image:board.image, 
+                content: board.content,
+                cardContent: board.cardContent,
+                whose:"YongSeok",
+             })
+            .then((res) => {
+                console.log(res);
+                setBoard((prevTasks) => boards.concat({ 
+                    id:res.id,
+                    title:board.title,
+                    image:board.image, 
+                    content: board.content,
+                    cardContent: board.cardContent,
+                    whose:"YongSeok",
+                 }));
+            });
+            setBoard({
+                title:"",
+                content:"",
+                image:"",
+                cardContent:""
+            });
+        }
     };
 
 
-    const onChangeHandler = (e) => {
-        // setTask(e.target.value);
+    const titleChangeHandler = (e) => {
+        console.log('title',e.target.value);
+        setBoard({...board, title:e.target.value});
     };
+    const contentChangeHandler = (e) => {
+        console.log('content',e.target.value);
+
+        setBoard({...board,content:e.target.value});
+    };
+    const imageChangeHandler = (e) => {
+        console.log('image',e.target.value);
+
+        setBoard({...board,image:e.target.value});
+    };
+    const cardContentChangeHandler = (e) => {
+        console.log('cardContent',e.target.value);
+
+        setBoard({...board,cardContent:e.target.value});
+    };
+
+    const onChangeHandler = ({
+        titleChangeHandler:titleChangeHandler,
+        contentChangeHandler:contentChangeHandler,
+        imageChangeHandler:imageChangeHandler,
+        cardContentChangeHandler:cardContentChangeHandler,
+    });
 
     const removeHandler = (id) => {
         // firestore
@@ -97,17 +133,15 @@ const Board = () =>{
         //     }
         // };
     };
-    
     return(
         <div>
             <h2>
                 여기는 게시판
             </h2>
-            <TaskAdd
-                task={task}
-                onClickHandler={onClickHandler}
+            <BoardAdd
+                board={""} 
                 onChangeHandler={onChangeHandler}
-                modify={modify}
+                onClickHandler={onClickHandler}
             />
             {loading && <h1>Loading ...</h1>}
             {!loading && (
@@ -117,7 +151,7 @@ const Board = () =>{
                 modifyHandler={modifyHandler}
                 />
             )}
-        </div>
+        </div>  
     );
 }
 

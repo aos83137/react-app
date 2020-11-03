@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
     mainContainer:{
+        flexGrow: 1,
         margin:theme.spacing(20),
         padding:theme.spacing(10),
         backgroundColor:"white",
@@ -27,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonFom:{
         marginTop:theme.spacing(1),
+    },
+    grid:{
+        width:'800px',
+        // backgroundColor:'red',
     }
   }));
 
@@ -48,21 +53,21 @@ const Login =()=>{
 
     return (
         <Card className={classes.mainContainer}>
-            <Grid container spacing={3} alignItems="center" justify="center" direction="column">
-                <Grid>
+            <Grid className={classes.grid} container spacing={3} alignItems="center" justify="center" direction="column">
+                <Grid item xs={12} sm={12}>
                     <Typography className={classes.gridStyle}>
                         로그인
                     </Typography>
                 </Grid>
-                <Grid container spacing={1} direction="row" alignItems="center" justify="center" >
-                    <Grid item>
+                <Grid item xs container spacing={1} direction="row" alignItems="center" justify="center"  >
+                    <Grid item >
                     <AccountCircle />
                     </Grid>
-                    <Grid item>
+                    <Grid item >
                     <TextField id="input-with-icon-grid" label="Id" />
                     </Grid>
                 </Grid>
-                <Grid container spacing={1} direction="row" alignItems="center" justify="center" >
+                <Grid item xs container spacing={1} direction="row" alignItems="center" justify="center" >
                     <Grid item>
                     <Lock/>
                     </Grid>
@@ -70,7 +75,7 @@ const Login =()=>{
                     <TextField id="input-with-icon-grid" label="Password" />
                     </Grid>
                 </Grid>
-                <Grid className={classes.buttonFom} container spacing={2} alignItems="center" justify="center" >
+                <Grid className={classes.buttonFom} item xs container spacing={2} alignItems="center" justify="center" >
                     <Grid item>
                         <Button
                             variant="contained"
