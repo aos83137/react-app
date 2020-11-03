@@ -64,12 +64,6 @@ const Board = () =>{
         // }
     };
 
-    const [expanded, setExpanded] = React.useState(false);
-
-    const handleExpandClick = (id) => {
-      setExpanded(!expanded);
-    };
-
 
     const onChangeHandler = (e) => {
         // setTask(e.target.value);

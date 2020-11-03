@@ -201,8 +201,14 @@ export default function App() {
             <Switch>
                 <div>
                     <Route exact path="/" component={Home}/>
-                    <Route path="/login" component={Login}/>
+                    {/* <Route path="/login" component={Login}/> */}
                     <Route path="/Board" component={Board}/>
+                    <Route
+                      path="/login"
+                      render={props => (
+                      <Login />
+                      )}
+                    />
                 </div>
             </Switch>
         </main>
