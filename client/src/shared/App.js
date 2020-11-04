@@ -22,7 +22,8 @@ import {
     Switch,
     Route,
     Redirect,
-    Link
+    Link,
+    useHistory
 } from 'react-router-dom';
 import {Home,Login,Board} from '../pages';
 
@@ -92,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration:'none',
     color: "#000000",
   },
-  linkLogin:{
+  linkColor:{
     textDecoration:'none',
     color: "#FFFFFF",
   }
@@ -145,7 +146,10 @@ export default function App() {
       setAuth(false);
     })
   }
-  const goHome=()=>{
+  let history = useHistory();
+
+  function goHome() {
+    history.push("/");
   }
   const goBoard=()=>{
   }
@@ -176,25 +180,49 @@ export default function App() {
               </Typography>
               {
                 auth?
-                <IconButton
-                    color="inherit"
-                    aria-label="login"
-                    edge="end"
-                    onClick={goLogout}
-                >
-                  <Icon>logout</Icon>
-                </IconButton>
+                <>
+                  <Link to="/" className={classes.linkColor}>
+                    <IconButton
+                          color="inherit"
+                          aria-label="login"
+                          edge="end"
+                          onClick={goHome}
+                      >
+                        <Icon>home</Icon>
+                    </IconButton>
+                  </Link>
+                  <IconButton
+                      color="inherit"
+                      aria-label="login"
+                      edge="end"
+                      onClick={goLogout}
+                  >
+                    <Icon>logout</Icon>
+                  </IconButton>
+                </>
                 :
-                <Link to="/login" className={classes.linkLogin}>
-                <IconButton
-                    color="inherit"
-                    aria-label="login"
-                    edge="end"
-                    onClick={goLogin}
-                >
-                    <Icon>login</Icon>
-                </IconButton>
-              </Link>
+                <>
+                  <Link to="/" className={classes.linkColor}>
+                    <IconButton
+                          color="inherit"
+                          aria-label="login"
+                          edge="end"
+                          onClick={goHome}
+                      >
+                        <Icon>home</Icon>
+                    </IconButton>
+                  </Link>
+                  <Link to="/login" className={classes.linkColor}>
+                    <IconButton
+                        color="inherit"
+                        aria-label="login"
+                        edge="end"
+                        onClick={goLogin}
+                    >
+                        <Icon>login</Icon>
+                    </IconButton>
+                  </Link>
+                </>
               }
           </Toolbar>
         </AppBar>
@@ -256,12 +284,20 @@ export default function App() {
         >
           <div className={classes.drawerHeader} />
             <Switch>
-                <div>
+                {
+                  auth?
+                  <div>
                     <Route exact path="/" render={auth=>(<Home/>)}/>
                     <Route path="/Board" component={Board}/>
+                    <Redirect path="*" to="/" />
+                  </div>
+                  :
+                  <div>
+                    <Route exact path="/" render={auth=>(<Home/>)}/>
                     <Route path="/login" render={props => (<Login/>)}/>
-                    {/* <Redirect path="*" to="/" /> */}
-                </div>
+                    <Redirect path="*" to="/" />
+                  </div>
+                }
             </Switch>
         </main>
       </div>
