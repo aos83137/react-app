@@ -144,6 +144,7 @@ export default function App() {
     authService.signOut().then(()=>{
       alert("로그아웃했어용");
       setAuth(false);
+      window.location.reload(false);
     })
   }
   let history = useHistory();
