@@ -104,7 +104,6 @@ export default function App() {
   const [open, setOpen] = React.useState(false);
   const [auth, setAuth] = useState(false);
   useEffect(() => {
-    console.log("auth",auth);
     authService.onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
@@ -214,24 +213,39 @@ export default function App() {
             </IconButton>
           </div>
           <Divider />
-          <List>
-              <Link to="/" className={classes.linkType}>
-                  <ListItem button key={"홈"} onClick={goHome}>
-                      <ListItemIcon>
-                          <Icon>home</Icon>
-                      </ListItemIcon>
-                      <ListItemText primary={"홈"} />
-                  </ListItem>
-              </Link>
-              <Link to="/board" className={classes.linkType}>
-                  <ListItem button key={"게시판"} onClick={goBoard}>
-                      <ListItemIcon>
-                          <Icon>list_alt</Icon>
-                      </ListItemIcon>                
-                      <ListItemText primary={"게시판"} />
-                  </ListItem>
-              </Link>
-          </List>
+            {
+              auth?
+              <List>
+                  <Link to="/" className={classes.linkType}>
+                      <ListItem button key={"홈"} onClick={goHome}>
+                          <ListItemIcon>
+                              <Icon>home</Icon>
+                          </ListItemIcon>
+                          <ListItemText primary={"홈"} />
+                      </ListItem>
+                  </Link>
+                  <Link to="/board" className={classes.linkType}>
+                      <ListItem button key={"게시판"} onClick={goBoard}>
+                          <ListItemIcon>
+                              <Icon>list_alt</Icon>
+                          </ListItemIcon>                
+                          <ListItemText primary={"게시판"} />
+                      </ListItem>
+                  </Link>
+              </List>
+              :
+              <List>
+                  <Link to="/" className={classes.linkType}>
+                      <ListItem button key={"홈"} onClick={goHome}>
+                          <ListItemIcon>
+                              <Icon>home</Icon>
+                          </ListItemIcon>
+                          <ListItemText primary={"홈"} />
+                      </ListItem>
+                  </Link>
+
+              </List>
+            }
           <Divider />
 
         </Drawer>
@@ -243,7 +257,7 @@ export default function App() {
           <div className={classes.drawerHeader} />
             <Switch>
                 <div>
-                    <Route exact path="/" component={Home}/>
+                    <Route exact path="/" render={auth=>(<Home/>)}/>
                     <Route path="/Board" component={Board}/>
                     <Route path="/login" render={props => (<Login/>)}/>
                     {/* <Redirect path="*" to="/" /> */}
