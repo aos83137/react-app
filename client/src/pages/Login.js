@@ -1,15 +1,14 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Lock from '@material-ui/icons/Lock';
 import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { Typography } from '@material-ui/core';
+import {authService, uiConfig} from '../firebase';
+import * as firebaseui from 'firebaseui';
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -17,10 +16,12 @@ const useStyles = makeStyles((theme) => ({
     },
     mainContainer:{
         flexGrow: 1,
-        margin:theme.spacing(20),
+        margin:"auto",
+        marginTop:theme.spacing(20),
         padding:theme.spacing(10),
         backgroundColor:"white",
-        minWidth:"580px"
+        minWidth:"580px",
+        maxWidth:"800px",
     },
     gridStyle:{
         fontSize:"24px",
@@ -30,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
         marginTop:theme.spacing(1),
     },
     grid:{
-        width:'800px',
         // backgroundColor:'red',
     }
   }));
@@ -40,8 +40,14 @@ const Login =()=>{
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    
-    const handleClick=()=>{
+
+    useEffect(() => {
+        var ui = new firebaseui.auth.AuthUI(authService);
+        console.log('login to ui',ui);
+        ui.start('#firebaseui-auth-container', uiConfig);
+    }, [])
+
+    const goLoginClick=()=>{
         try{
             Login({email, password})
         }catch(e){
@@ -50,7 +56,15 @@ const Login =()=>{
             setPassword("")
         }
     }
-
+    const goSignUpClick=()=>{
+        try{
+            Login({email, password})
+        }catch(e){
+            alert("Failed to SignUp")
+            setEmail("")
+            setPassword("")
+        }
+    }
     return (
         <Card className={classes.mainContainer}>
             <Grid className={classes.grid} container spacing={3} alignItems="center" justify="center" direction="column">
@@ -64,7 +78,7 @@ const Login =()=>{
                     <AccountCircle />
                     </Grid>
                     <Grid item >
-                    <TextField id="input-with-icon-grid" label="Id" />
+                    <TextField id="input-with-icon-grid" label="Id" type="email"/>
                     </Grid>
                 </Grid>
                 <Grid item xs container spacing={1} direction="row" alignItems="center" justify="center" >
@@ -72,7 +86,7 @@ const Login =()=>{
                     <Lock/>
                     </Grid>
                     <Grid item>
-                    <TextField id="input-with-icon-grid" label="Password" />
+                    <TextField id="input-with-icon-grid" label="Password" type="password"/>
                     </Grid>
                 </Grid>
                 <Grid className={classes.buttonFom} item xs container spacing={2} alignItems="center" justify="center" >
@@ -80,7 +94,7 @@ const Login =()=>{
                         <Button
                             variant="contained"
                             color="primary"
-                            // onClick={}
+                            onClick={goSignUpClick}
                         >
                             {"회원가입"}
                         </Button>
@@ -89,11 +103,15 @@ const Login =()=>{
                         <Button
                             variant="contained"
                             color="primary"
-                            // onClick={}
+                            onClick={goLoginClick}
                         >
                             {"로그인"}
                         </Button>
                     </Grid>
+                </Grid>
+                <Grid item>
+                        <div id="firebaseui-auth-container"></div>
+                        <div id="loader">Loading...</div>
                 </Grid>
             </Grid>
         </Card>

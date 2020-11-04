@@ -4,6 +4,7 @@ import { TaskAdd, TaskDisplay } from "./components";
 import { firestore } from "./firebase";
 
 function App() {
+  
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
   const [modify, setModify] = useState(false);
@@ -78,6 +79,8 @@ function App() {
 
   return (
     <div className="App">
+      <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+      <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
       <TaskAdd
         task={task}
         onClickHandler={onClickHandler}

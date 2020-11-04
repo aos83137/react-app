@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import TaskAdd from '../components/TaskAdd';
 import TaskDisplay from '../components/TaskDisplay';
 import BoardAdd from '../components/BoardAdd';
 import {firestore} from "../firebase";
-import Grid from "@material-ui/core/Grid";
 const Board = () =>{
     // const [tasks, setTasks] = useState([]);
-    const [task, setTask] = useState("");
     const [board, setBoard] = useState({
         title:"",
         content:"",
@@ -14,8 +11,6 @@ const Board = () =>{
         cardContent:"",
     });
     const [boards, setBoards] = useState([]);
-
-    const [modify, setModify] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const fetchData = useCallback(() => {
@@ -67,6 +62,9 @@ const Board = () =>{
                     cardContent: board.cardContent,
                     whose:"YongSeok",
                  }));
+            }).then((e)=>{
+                console.log(e);
+                alert("저장 완료");
             });
             setBoard({
                 title:"",

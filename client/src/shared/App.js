@@ -21,7 +21,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    // useRouteMatch,
+    Redirect,
     Link
 } from 'react-router-dom';
 import {Home,Login,Board} from '../pages';
@@ -201,14 +201,9 @@ export default function App() {
             <Switch>
                 <div>
                     <Route exact path="/" component={Home}/>
-                    {/* <Route path="/login" component={Login}/> */}
                     <Route path="/Board" component={Board}/>
-                    <Route
-                      path="/login"
-                      render={props => (
-                      <Login />
-                      )}
-                    />
+                    <Route path="/login" render={props => (<Login/>)}/>
+                    {/* <Redirect path="*" to="/" /> */}
                 </div>
             </Switch>
         </main>
