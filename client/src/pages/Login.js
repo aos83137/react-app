@@ -8,7 +8,9 @@ import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
 import { Typography } from '@material-ui/core';
 import {authService, uiConfig} from '../firebase';
-import * as firebaseui from 'firebaseui';
+import {  
+    useHistory
+} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -36,34 +38,64 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const Login =()=>{
+
     const classes = useStyles();
 
+    const [auth, setAuth] = useState({})
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     useEffect(() => {
-        var ui = new firebaseui.auth.AuthUI(authService);
-        console.log('login to ui',ui);
-        ui.start('#firebaseui-auth-container', uiConfig);
+        authService.onAuthStateChanged(function(user) {
+            if(user){
+                setAuth(user);
+            }
+        });
     }, [])
+    let history = useHistory();
 
-    const goLoginClick=()=>{
-        try{
-            Login({email, password})
-        }catch(e){
-            alert("Failed to login")
-            setEmail("")
-            setPassword("")
-        }
+    function goLoginClick(email,password) {
+      authService.signInWithEmailAndPassword(email, password)
+      .then((res)=>{
+          alert("로그인 성공");
+          history.push("/");
+      })
+      .catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // [START_EXCLUDE]
+          if (errorCode === 'auth/wrong-password') {
+              alert('Wrong password.');
+          } else {
+              alert(errorMessage);
+          }
+          console.log('goLoginClick function - error',error);
+          // [END_EXCLUDE]
+      });
     }
-    const goSignUpClick=()=>{
-        try{
-            Login({email, password})
-        }catch(e){
-            alert("Failed to SignUp")
-            setEmail("")
-            setPassword("")
-        }
+
+    const goSignUpClick=(email,password)=>{
+        authService.createUserWithEmailAndPassword(email, password).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // [START_EXCLUDE]
+            if (errorCode == 'auth/weak-password') {
+              alert('The password is too weak.');
+            } else {
+              alert(errorMessage);
+            }
+            console.log(error);
+            // [END_EXCLUDE]
+          });
+    }
+
+    const emailHandler =(data)=>{
+        setEmail(data.target.value);
+    }
+    const passwordHandler=(data)=>{
+        setPassword(data.target.value);
     }
     return (
         <Card className={classes.mainContainer}>
@@ -78,7 +110,7 @@ const Login =()=>{
                     <AccountCircle />
                     </Grid>
                     <Grid item >
-                    <TextField id="input-with-icon-grid" label="Id" type="email"/>
+                    <TextField id="input-with-icon-grid" label="Id" type="email" onChange={emailHandler}/>
                     </Grid>
                 </Grid>
                 <Grid item xs container spacing={1} direction="row" alignItems="center" justify="center" >
@@ -86,7 +118,7 @@ const Login =()=>{
                     <Lock/>
                     </Grid>
                     <Grid item>
-                    <TextField id="input-with-icon-grid" label="Password" type="password"/>
+                    <TextField id="input-with-icon-grid" label="Password" type="password" onChange={passwordHandler}/>
                     </Grid>
                 </Grid>
                 <Grid className={classes.buttonFom} item xs container spacing={2} alignItems="center" justify="center" >
@@ -94,7 +126,7 @@ const Login =()=>{
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={goSignUpClick}
+                            onClick={(e)=>goSignUpClick(email,password)}
                         >
                             {"회원가입"}
                         </Button>
@@ -103,7 +135,9 @@ const Login =()=>{
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={goLoginClick}
+                            onClick={(e)=>{
+                                return goLoginClick(email,password)
+                            }}
                         >
                             {"로그인"}
                         </Button>

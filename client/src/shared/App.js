@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,7 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
-
+import {authService} from '../firebase';
 import {  
     BrowserRouter as Router,
     Switch,
@@ -102,6 +102,33 @@ export default function App() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [auth, setAuth] = useState(false);
+  useEffect(() => {
+    console.log("auth",auth);
+    authService.onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        setAuth(user);
+        var displayName = user.displayName;
+        var email = user.email;
+        var emailVerified = user.emailVerified;
+        var photoURL = user.photoURL;
+        var isAnonymous = user.isAnonymous;
+        var uid = user.uid;
+        var providerData = user.providerData;
+        console.log('displayName',displayName);
+        console.log('email',email);
+        console.log('emailVerified',emailVerified);//이메일확인
+        console.log('photoURL',photoURL);
+        console.log('isAnonymous',isAnonymous); //익명인가
+        console.log('uid',uid);
+        console.log('providerData',providerData);
+      } else {
+        // User is signed out.
+        // ...
+      }
+    });
+  }, [])
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -112,14 +139,18 @@ export default function App() {
   };
 
   const goLogin=()=>{
-      
+  }
+  const goLogout=()=>{
+    authService.signOut().then(()=>{
+      alert("로그아웃했어용");
+      setAuth(false);
+    })
   }
   const goHome=()=>{
-
   }
   const goBoard=()=>{
-
   }
+
   return (
     <Router>
       <div className={classes.root}>
@@ -144,7 +175,18 @@ export default function App() {
               <Typography variant="h6" className={classes.title}>
                   리엑트와 파이어베이스로 만드는 홈페이지
               </Typography>
-              <Link to="/login" className={classes.linkLogin}>
+              {
+                auth?
+                <IconButton
+                    color="inherit"
+                    aria-label="login"
+                    edge="end"
+                    onClick={goLogout}
+                >
+                  <Icon>logout</Icon>
+                </IconButton>
+                :
+                <Link to="/login" className={classes.linkLogin}>
                 <IconButton
                     color="inherit"
                     aria-label="login"
@@ -154,6 +196,7 @@ export default function App() {
                     <Icon>login</Icon>
                 </IconButton>
               </Link>
+              }
           </Toolbar>
         </AppBar>
         <Drawer
