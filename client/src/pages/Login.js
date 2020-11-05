@@ -7,7 +7,7 @@ import Lock from '@material-ui/icons/Lock';
 import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
 import { Typography } from '@material-ui/core';
-import {authService, uiConfig} from '../firebase';
+import {authService, googleSign} from '../firebase';
 import {  
     useHistory
 } from 'react-router-dom';
@@ -41,16 +41,12 @@ const Login =()=>{
 
     const classes = useStyles();
 
-    const [auth, setAuth] = useState({})
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     useEffect(() => {
-        authService.onAuthStateChanged(function(user) {
-            if(user){
-                setAuth(user);
-            }
-        });
+
+
     }, [])
     let history = useHistory();
 
@@ -74,7 +70,9 @@ const Login =()=>{
           // [END_EXCLUDE]
       });
     }
-
+    const goTest=()=>{
+        alert("etest");
+    }
     const goSignUpClick=(email,password)=>{
         authService.createUserWithEmailAndPassword(email, password).catch(function(error) {
             // Handle Errors here.
@@ -146,6 +144,17 @@ const Login =()=>{
                 <Grid item>
                         <div id="firebaseui-auth-container"></div>
                         <div id="loader">Loading...</div>
+                </Grid>
+                <Grid item>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={(e)=>{
+                            return googleSign()
+                        }}
+                    >
+                        {"구글로그인입니당"}
+                    </Button>
                 </Grid>
             </Grid>
         </Card>
