@@ -6,7 +6,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Lock from '@material-ui/icons/Lock';
 import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
-import { Typography } from '@material-ui/core';
+import { requirePropFactory, Typography } from '@material-ui/core';
 import {authService, googleSign} from '../firebase';
 import {  
     useHistory
@@ -34,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
     },
     grid:{
         // backgroundColor:'red',
+    },
+    googleButton:{
+        backgroundColor:'white',
+        color:'black',
     }
   }));
 
@@ -142,17 +146,15 @@ const Login =()=>{
                     </Grid>
                 </Grid>
                 <Grid item>
-                        <div id="firebaseui-auth-container"></div>
-                        <div id="loader">Loading...</div>
-                </Grid>
-                <Grid item>
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={(e)=>{
                             return googleSign()
                         }}
+                        // className={classes.googleButton}
                     >
+                        <img src={require('../static/images/google.jpg')}/>
                         {"구글로그인입니당"}
                     </Button>
                 </Grid>
