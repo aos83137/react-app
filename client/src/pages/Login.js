@@ -150,6 +150,7 @@ const Login =()=>{
                         variant="contained"
                         color="primary"
                         onClick={(e)=>{
+                            history.push("/");
                             return googleSign()
                         }}
                         // className={classes.googleButton}

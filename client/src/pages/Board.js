@@ -19,6 +19,7 @@ const Board = () =>{
         setLoading(true);
         firestore
           .collection("boards")
+          .orderBy("whose", "asc")
           .get()
           .then((docs) => {
                 docs.forEach((doc) =>{

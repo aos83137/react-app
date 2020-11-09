@@ -12,11 +12,10 @@ const Home =()=>{
               // ...
             }
         });
-        // setUser(authService.currentUser);
+
     }, [])
     return (
         <div>
-            {console.log('user',auth)}
             <h2>Home</h2>
             {
                 auth?

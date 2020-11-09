@@ -109,10 +109,10 @@ export default function App() {
       if (user) {
         // User is signed in.
         setAuth(user);
-        var displayName = user.displayName;
+        var displayName = user.displayName; // 구글 사용자 이름나옴
         var email = user.email;
         var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL;
+        var photoURL = user.photoURL; // 구글 사진 url나옴
         var isAnonymous = user.isAnonymous;
         var uid = user.uid;
         var providerData = user.providerData;
