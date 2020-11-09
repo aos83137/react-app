@@ -6,7 +6,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Lock from '@material-ui/icons/Lock';
 import Button from "@material-ui/core/Button";
 import Card from '@material-ui/core/Card';
-import { requirePropFactory, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import {authService, googleSign} from '../firebase';
 import {  
     useHistory
@@ -74,16 +74,14 @@ const Login =()=>{
           // [END_EXCLUDE]
       });
     }
-    const goTest=()=>{
-        alert("etest");
-    }
+
     const goSignUpClick=(email,password)=>{
         authService.createUserWithEmailAndPassword(email, password).catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
             // [START_EXCLUDE]
-            if (errorCode == 'auth/weak-password') {
+            if (errorCode === 'auth/weak-password') {
               alert('The password is too weak.');
             } else {
               alert(errorMessage);
@@ -128,7 +126,10 @@ const Login =()=>{
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={(e)=>goSignUpClick(email,password)}
+                            onClick={(e)=>{
+                                history.push("/");
+                                return goSignUpClick(email,password)
+                            }}
                         >
                             {"회원가입"}
                         </Button>
@@ -155,7 +156,7 @@ const Login =()=>{
                         }}
                         // className={classes.googleButton}
                     >
-                        <img src={require('../static/images/google.jpg')}/>
+                        <img src={require('../static/images/google.jpg')} alt="google login"/>
                         {"구글로그인입니당"}
                     </Button>
                 </Grid>
