@@ -17,6 +17,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Icon from '@material-ui/core/Icon';
 import {authService} from '../firebase';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {  
     BrowserRouter as Router,
     Switch,
@@ -96,7 +98,11 @@ const useStyles = makeStyles((theme) => ({
   linkColor:{
     textDecoration:'none',
     color: "#FFFFFF",
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 export default function App() {
@@ -104,29 +110,32 @@ export default function App() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     authService.onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
         setAuth(user);
-        var displayName = user.displayName; // 구글 사용자 이름나옴
-        var email = user.email;
-        var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL; // 구글 사진 url나옴
-        var isAnonymous = user.isAnonymous;
-        var uid = user.uid;
-        var providerData = user.providerData;
-        console.log('displayName',displayName);
-        console.log('email',email);
-        console.log('emailVerified',emailVerified);//이메일확인
-        console.log('photoURL',photoURL);
-        console.log('isAnonymous',isAnonymous); //익명인가
-        console.log('uid',uid);
-        console.log('providerData',providerData);
+        // var displayName = user.displayName; // 구글 사용자 이름나옴
+        // var email = user.email;
+        // var emailVerified = user.emailVerified;
+        // var photoURL = user.photoURL; // 구글 사진 url나옴
+        // var isAnonymous = user.isAnonymous;
+        // var uid = user.uid;
+        // var providerData = user.providerData;
+        // console.log('displayName',displayName);
+        // console.log('email',email);
+        // console.log('emailVerified',emailVerified);//이메일확인
+        // console.log('photoURL',photoURL);
+        // console.log('isAnonymous',isAnonymous); //익명인가
+        // console.log('uid',uid);
+        // console.log('providerData',providerData);
       } else {
         // User is signed out.
         // ...
       }
+      setLoading(true);
     });
   }, [])
 
@@ -137,17 +146,17 @@ export default function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  let history = useHistory();
 
-  const goLogin=()=>{
-  }
+
   const goLogout=()=>{
     authService.signOut().then(()=>{
       alert("로그아웃했어용");
       setAuth(false);
+      history.push("/");
       window.location.reload(false);
     })
   }
-  let history = useHistory();
 
   function goHome() {
     history.push("/");
@@ -156,6 +165,7 @@ export default function App() {
   }
 
   return (
+    loading?
     <Router>
       <div className={classes.root}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
@@ -218,7 +228,6 @@ export default function App() {
                         color="inherit"
                         aria-label="login"
                         edge="end"
-                        onClick={goLogin}
                     >
                         <Icon>login</Icon>
                     </IconButton>
@@ -286,22 +295,28 @@ export default function App() {
           <div className={classes.drawerHeader} />
             <Switch>
                 {
-                  auth?
-                  <div>
-                    <Route exact path="/" render={auth=>(<Home/>)}/>
-                    <Route path="/Board" component={Board}/>
-                    <Redirect path="*" to="/" />
-                  </div>
-                  :
-                  <div>
-                    <Route exact path="/" render={auth=>(<Home/>)}/>
-                    <Route path="/login" render={props => (<Login/>)}/>
-                    <Redirect path="*" to="/" />
-                  </div>
+                    auth?
+                    <div>
+                      <Route exact path="/" render={auth=>(<Home/>)}/>
+                      <Route path="/board" component={Board}/>
+                      <Redirect path="/login" to="/" />
+                    </div>
+                    :
+                    <div>
+                      <Route exact path="/" render={auth=>(<Home/>)}/>
+                      <Route path="/login" render={props => (<Login/>)}/>
+                      <Redirect path="/board" to="/" />
+                    </div>
                 }
             </Switch>
         </main>
       </div>
     </Router>
+    :
+    <div>
+      <Backdrop className={classes.backdrop} open={true}>
+        < CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
   );
 }

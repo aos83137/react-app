@@ -169,8 +169,11 @@ const Login =()=>{
                         variant="contained"
                         color="primary"
                         onClick={(e)=>{
-                            history.push("/");
                             return googleSign()
+                            .then(()=>{
+                                history.push("/");
+                                console.log("success google login");
+                            });
                         }}
                         // className={classes.googleButton}
                     >
