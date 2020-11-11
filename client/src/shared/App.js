@@ -299,13 +299,13 @@ export default function App() {
                     <div>
                       <Route exact path="/" render={auth=>(<Home/>)}/>
                       <Route path="/board" component={Board}/>
-                      <Redirect path="/login" to="/" />
+                      {/* <Redirect path="/login" to="/" /> */}
                     </div>
                     :
                     <div>
                       <Route exact path="/" render={auth=>(<Home/>)}/>
                       <Route path="/login" render={props => (<Login/>)}/>
-                      <Redirect path="/board" to="/" />
+                      {/* <Redirect path="/board" to="/" /> */}
                     </div>
                 }
             </Switch>
