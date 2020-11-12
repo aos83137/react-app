@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TaskDisplay from '../components/TaskDisplay';
 import BoardAdd from '../components/BoardAdd';
-import {firestore} from "../firebase";
+import {firestore,sFirestore} from "../firebase";
 const Board = () =>{
     // const [tasks, setTasks] = useState([]);
     const [board, setBoard] = useState({
@@ -18,10 +18,10 @@ const Board = () =>{
         let boardData = [];
         setLoading(true);
         firestore
-          .collection("boards")
-          .orderBy("whose", "asc")
-          .get()
-          .then((docs) => {
+            .collection("boards")
+            .orderBy("timeCreated", "desc")
+            .get()
+            .then((docs) => {
                 docs.forEach((doc) =>{
                     boardData.push({
                         id:doc.id, 
@@ -30,6 +30,7 @@ const Board = () =>{
                         content: doc.data().content,
                         cardContent: doc.data().cardContent,
                         whose:doc.data().whose,
+                        timeCreated:doc.data().timeCreated,
                     });
                 })
                 setBoards(boardData);
@@ -52,6 +53,7 @@ const Board = () =>{
                 content: board.content,
                 cardContent: board.cardContent,
                 whose:"YongSeok",
+                timeCreated:sFirestore.Timestamp.fromDate(new Date())
              })
             .then((res) => {
                 console.log(res);
