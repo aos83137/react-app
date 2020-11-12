@@ -166,8 +166,8 @@ export default function App() {
 
   return (
     loading?
-    <Router>
       <div className={classes.root}>
+      <Router>
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
         <CssBaseline />
         <AppBar
@@ -292,26 +292,27 @@ export default function App() {
             [classes.contentShift]: open,
           })}
         >
-          <div className={classes.drawerHeader} />
+        <div className={classes.drawerHeader} />
             <Switch>
                 {
                     auth?
-                    <div>
+                    <React.Fragment>
                       <Route exact path="/" render={auth=>(<Home/>)}/>
                       <Route path="/board" component={Board}/>
                       {/* <Redirect path="/login" to="/" /> */}
-                    </div>
+                    </React.Fragment>
                     :
-                    <div>
+                    <React.Fragment>
                       <Route exact path="/" render={auth=>(<Home/>)}/>
                       <Route path="/login" render={props => (<Login/>)}/>
                       {/* <Redirect path="/board" to="/" /> */}
-                    </div>
+                    </React.Fragment>
                 }
             </Switch>
         </main>
+        </Router>
+
       </div>
-    </Router>
     :
     <div>
       <Backdrop className={classes.backdrop} open={true}>

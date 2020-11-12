@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TaskAdd = ({ task, onChangeHandler, onClickHandler, modify }) => {
   const classes = useStyles();
+
   return (
     <div>
       <form

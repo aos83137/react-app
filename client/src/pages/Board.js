@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TaskDisplay from '../components/TaskDisplay';
 import BoardAdd from '../components/BoardAdd';
-import {firestore,sFirestore} from "../firebase";
+import {firestore,sFirestore,storageService} from "../firebase";
 const Board = () =>{
     // const [tasks, setTasks] = useState([]);
     const [board, setBoard] = useState({
@@ -12,6 +12,24 @@ const Board = () =>{
     });
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
+    const storageRef = storageService.ref();
+
+    // Points to 'images'
+    var imagesRef = storageRef.child('images');
+
+    // Points to 'images/space.jpg'
+    // Note that you can use variables to create child values
+    var fileName = 'space.jpg';
+    var spaceRef = imagesRef.child(fileName);
+
+    // File path is 'images/space.jpg'
+    var path = spaceRef.fullPath
+
+    // File name is 'space.jpg'
+    var name = spaceRef.name
+
+    // Points to 'images'
+    var imagesRef = spaceRef.parent;
 
     const fetchData = useCallback(() => {
         // let tasksData = [];
