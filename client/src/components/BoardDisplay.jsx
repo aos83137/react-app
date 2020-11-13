@@ -6,6 +6,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
+// import SaveIcon from '@material-ui/icons/Save';
+// import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) =>({
   root:{
@@ -42,14 +44,14 @@ const useStyles = makeStyles((theme) =>({
   },
 }));
 
-const TaskDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
+const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
-  const handleExpandClick = (panel,isExpanded) => {
-    console.log('isExpanded:',isExpanded);
-    setExpanded(isExpanded ? panel : false);
-  };
+//   const handleExpandClick = (panel,isExpanded) => {
+//     console.log('isExpanded:',isExpanded);
+//     setExpanded(isExpanded ? panel : false);
+//   };
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -83,13 +85,21 @@ const TaskDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
             <Typography className={classes.secondaryHeading}>{boardDateForm(board.timeCreated.seconds*1000)}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>
-                {board.content}
-              </Typography>
+                <div>
+                    <div>
+                        <p>머릿말</p>
+                    </div>
+                    <div>
+                        <img src={board.image} alt="card image"/>
+                    </div>
+                    <Typography>
+                        {board.content}
+                    </Typography>
+                </div>
             </AccordionDetails>
           </Accordion>
       ))}
     </div>
   );
 };
-export default React.memo(TaskDisplay);
+export default React.memo(BoardDisplay);
