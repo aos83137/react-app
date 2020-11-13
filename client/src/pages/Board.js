@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import BoardAdd from '../components/BoardAdd';
 import BoardDisplay from '../components/BoardDisplay';
-import {firestore,sFirestore,storageService} from "../firebase";
+import {firestore,sFirestore,
+    storageService
+} from "../firebase";
 const Board = () =>{
     // const [tasks, setTasks] = useState([]);
     const [board, setBoard] = useState({
@@ -12,24 +14,9 @@ const Board = () =>{
     });
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
-    const storageRef = storageService.ref();
+    const [url, setUrl] = useState("");
+    const [progress, setProgress] = useState(0);
 
-    // // Points to 'images'
-    // var imagesRef = storageRef.child('images');
-
-    // // Points to 'images/space.jpg'
-    // // Note that you can use variables to create child values
-    // var fileName = 'space.jpg';
-    // var spaceRef = imagesRef.child(fileName);
-
-    // // File path is 'images/space.jpg'
-    // var path = spaceRef.fullPath
-
-    // // File name is 'space.jpg'
-    // var name = spaceRef.name
-
-    // // Points to 'images'
-    // var imagesRef = spaceRef.parent;
 
     const fetchData = useCallback(() => {
         // let tasksData = [];
@@ -59,9 +46,32 @@ const Board = () =>{
         fetchData();
         }, [fetchData]);
 
-    const onClickHandler = (e) => {
-        // e.preventDefault();
-        console.log('board',board);
+    const onClickHandler = (e, seletedFile) => {
+        e.preventDefault();
+        console.log('in board selectedFile.name', seletedFile);
+        const uploadTask = storageService.ref(`images/${seletedFile.name}`).put(seletedFile);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setProgress(progress);
+            },
+            error => {
+              console.log(error);
+            },
+            () => {
+                storageService
+                    .ref("images")
+                    .child(seletedFile.name)
+                    .getDownloadURL()
+                    .then(url => {
+                    setUrl(url);
+                    });
+            }
+          );
+
         if (board !== "") {
             firestore
             .collection("boards")

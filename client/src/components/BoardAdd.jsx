@@ -1,8 +1,7 @@
-import React from "react";
+import React,{useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,7 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
 
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
@@ -39,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
 const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHandler }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-
+  const [seletedFile , setSeletedFile ] = useState(null);
+  const [url, setUrl] = useState("");
+  const [progress, setProgress] = useState(0);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -47,30 +48,36 @@ const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHand
   const handleClose = () => {
     setOpen(false);
   };
+  const handleFileInput= (e)=>{
+    if(e.target.files[0]){
+      setSeletedFile(e.target.files[0])
+      console.log(e.target.files[0]);
+    }
+  }
+  const handleUpload=()=>{
 
+  }
 
   return (
     <>
       <Fab color="primary" aria-label="add" className={classes.fab} onClick={handleClickOpen}>
         <AddIcon />
       </Fab>
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"글 등록"}</DialogTitle>
+        <form
+          className={classes.root}
+          noValidate
+          autoComplete="off"
+          onSubmit={(e,seletedFile) => onClickHandler(e,seletedFile)}
         >
-          <DialogTitle id="alert-dialog-title">{"글 등록"}</DialogTitle>
-            <form
-              className={classes.root}
-              noValidate
-              autoComplete="off"
-              onSubmit={(e) => onClickHandler(e)}
-            >
-              <DialogContent>
-              
+          <DialogContent>
             <Grid container spacing={2} alignItems="center" justify="center" direction="column">
-
               <Grid item>
                 <TextField
                   id="standard-basic"
@@ -96,38 +103,44 @@ const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHand
                 />
               </Grid>
               <Grid item>
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.button}
-                  startIcon={<CloudUploadIcon />}
-                >
-                  사진등록
-                </Button>      
-                {/* <TextField
-                  id="standard-basic"
-                  label="image"
-                  onChange={onChangeHandler.imageChangeHandler}
-                /> */}
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  style={{ display: 'none' }}
+                  id="raised-button-file"
+                  multiple
+                  type="file"
+                  onChange={handleFileInput}
+                />
+                <label htmlFor="raised-button-file">
+                  <Button variant="contained" color="default" startIcon={<CloudUploadIcon />} component="span" className={classes.button}>
+                    사진 등록
+                  </Button>
+                </label> 
+                {seletedFile?
+                  <p>{seletedFile.name}</p>
+                  :
+                  <p>{"파일 선택 하지 않음"}</p>
+                }
               </Grid>
             </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                {"취소"}
-              </Button>
-              <Button
-                color="primary"
-                onClick={(e) => {
-                    setOpen(false);
-                    return onClickHandler(e);
-                  }
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              {"취소"}
+            </Button>
+            <Button
+              color="primary"
+              onClick={(e) => {
+                  setOpen(false);
+                  return onClickHandler(e);
                 }
-              >
-                {"저장"}
-              </Button>
-            </DialogActions>
-          </form>
+              }
+            >
+              {"저장"}
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </>
   );

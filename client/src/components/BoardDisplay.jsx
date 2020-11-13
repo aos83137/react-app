@@ -90,7 +90,7 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                         <p>머릿말</p>
                     </div>
                     <div>
-                        <img src={board.image} alt="card image"/>
+                        <img src={board.image} alt="card_image"/>
                     </div>
                     <Typography>
                         {board.content}

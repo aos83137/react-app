@@ -23,7 +23,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect,
+    // Redirect,
     Link,
     useHistory
 } from 'react-router-dom';
