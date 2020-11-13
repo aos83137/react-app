@@ -11,12 +11,14 @@ const Board = () =>{
         content:"",
         image:"",
         cardContent:"",
+        FileInput:{},
     });
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [seletedFile , setSeletedFile ] = useState(null);
     const [url, setUrl] = useState("");
     const [progress, setProgress] = useState(0);
-
+    const [fillInput, setFillInput] = useState("");
 
     const fetchData = useCallback(() => {
         // let tasksData = [];
@@ -46,7 +48,8 @@ const Board = () =>{
         fetchData();
         }, [fetchData]);
 
-    const onClickHandler = (e, seletedFile) => {
+
+    const boardAddClickHandler = (e, seletedFile) => {
         e.preventDefault();
         console.log('in board selectedFile.name', seletedFile);
         const uploadTask = storageService.ref(`images/${seletedFile.name}`).put(seletedFile);
@@ -126,12 +129,18 @@ const Board = () =>{
 
         setBoard({...board,cardContent:e.target.value});
     };
-
+    const FileInputHandler= (e)=>{
+        if(e.target.files[0]){
+            console.log('in Boards ',e.target.files[0]);
+            setFillInput(e.target.files[0]);
+        }
+    }
     const onChangeHandler = ({
         titleChangeHandler:titleChangeHandler,
         contentChangeHandler:contentChangeHandler,
         imageChangeHandler:imageChangeHandler,
         cardContentChangeHandler:cardContentChangeHandler,
+        FileInputHandler:FileInputHandler
     });
 
     const removeHandler = (id) => {
@@ -168,9 +177,10 @@ const Board = () =>{
                 여기는 게시판
             </h2>
             <BoardAdd
-                board={""} 
+                board={boards}
+                fillInput={fillInput} 
                 onChangeHandler={onChangeHandler}
-                onClickHandler={onClickHandler}
+                boardAddClickHandler={boardAddClickHandler}
             />
             {loading && <h1>Loading ...</h1>}
             {!loading && (

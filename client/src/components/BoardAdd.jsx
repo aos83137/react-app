@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHandler }) => {
+const BoardAdd = ({ board,fillInput, onChangeHandler, boardAddClickHandler }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [seletedFile , setSeletedFile ] = useState(null);
@@ -48,15 +48,6 @@ const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHand
   const handleClose = () => {
     setOpen(false);
   };
-  const handleFileInput= (e)=>{
-    if(e.target.files[0]){
-      setSeletedFile(e.target.files[0])
-      console.log(e.target.files[0]);
-    }
-  }
-  const handleUpload=()=>{
-
-  }
 
   return (
     <>
@@ -74,7 +65,7 @@ const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHand
           className={classes.root}
           noValidate
           autoComplete="off"
-          onSubmit={(e,seletedFile) => onClickHandler(e,seletedFile)}
+          onSubmit={(e) => boardAddClickHandler(e)}
         >
           <DialogContent>
             <Grid container spacing={2} alignItems="center" justify="center" direction="column">
@@ -110,15 +101,17 @@ const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHand
                   id="raised-button-file"
                   multiple
                   type="file"
-                  onChange={handleFileInput}
+                  onChange={(e)=>{
+                    return onChangeHandler.FileInputHandler(e);
+                  }}
                 />
                 <label htmlFor="raised-button-file">
                   <Button variant="contained" color="default" startIcon={<CloudUploadIcon />} component="span" className={classes.button}>
                     사진 등록
                   </Button>
                 </label> 
-                {seletedFile?
-                  <p>{seletedFile.name}</p>
+                {fillInput?
+                  <p>{fillInput.name}</p>
                   :
                   <p>{"파일 선택 하지 않음"}</p>
                 }
@@ -133,7 +126,7 @@ const BoardAdd = ({ board, onChangeHandler, onClickHandler,cardContentChangeHand
               color="primary"
               onClick={(e) => {
                   setOpen(false);
-                  return onClickHandler(e);
+                  return boardAddClickHandler(e);
                 }
               }
             >
