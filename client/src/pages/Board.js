@@ -5,7 +5,6 @@ import {firestore,sFirestore,
     storageService
 } from "../firebase";
 const Board = () =>{
-    // const [tasks, setTasks] = useState([]);
     const [board, setBoard] = useState({
         title:"",
         content:"",
@@ -15,10 +14,10 @@ const Board = () =>{
     });
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [seletedFile , setSeletedFile ] = useState(null);
-    const [url, setUrl] = useState("");
+    // const [fillInput , setSeletedFile ] = useState(null);
     const [progress, setProgress] = useState(0);
     const [fillInput, setFillInput] = useState("");
+    const [open, setOpen] = React.useState(false);
 
     const fetchData = useCallback(() => {
         // let tasksData = [];
@@ -48,57 +47,30 @@ const Board = () =>{
         fetchData();
         }, [fetchData]);
 
-
-    const boardAddClickHandler = (e, seletedFile) => {
-        e.preventDefault();
-        console.log('in board selectedFile.name', seletedFile);
-        const uploadTask = storageService.ref(`images/${seletedFile.name}`).put(seletedFile);
-        uploadTask.on(
-            "state_changed",
-            snapshot => {
-              const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              );
-              setProgress(progress);
-            },
-            error => {
-              console.log(error);
-            },
-            () => {
-                storageService
-                    .ref("images")
-                    .child(seletedFile.name)
-                    .getDownloadURL()
-                    .then(url => {
-                    setUrl(url);
-                    });
-            }
-          );
-
+    const PostFirebase=(url)=>{
         if (board !== "") {
             firestore
             .collection("boards")
             .add({ 
                 title:board.title,
-                image:board.image, 
+                image:url, 
                 content: board.content,
                 cardContent: board.cardContent,
                 whose:"YongSeok",
                 timeCreated:sFirestore.Timestamp.fromDate(new Date())
              })
             .then((res) => {
-                console.log(res);
                 setBoard((prevTasks) => boards.concat({ 
                     id:res.id,
                     title:board.title,
-                    image:board.image, 
+                    image:url, 
                     content: board.content,
                     cardContent: board.cardContent,
                     whose:"YongSeok",
                  }));
             }).then((e)=>{
-                console.log(e);
                 alert("저장 완료");
+                setOpen(false);
             });
             setBoard({
                 title:"",
@@ -107,6 +79,37 @@ const Board = () =>{
                 cardContent:""
             });
         }
+    }
+    const boardAddClickHandler = (e) => {
+        e.preventDefault();
+        // console.log('in board selectedFile.name', fillinput.name);
+        const uploadTask = storageService.ref(`images/${fillInput.name}`).put(fillInput);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              console.log('progress -',progress); // 잘되고
+              setProgress(progress);
+            },
+            error => {
+              console.log(error);
+            },
+            () => {
+                storageService
+                    .ref("images")
+                    .child(fillInput.name)
+                    .getDownloadURL()
+                    .then(url => {
+                        console.log('fire stroe 넣음 - url: ',url);
+                        PostFirebase(url);
+                    });
+            }
+          ); 
+
+        
+
     };
 
 
@@ -135,24 +138,34 @@ const Board = () =>{
             setFillInput(e.target.files[0]);
         }
     }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    
+    const handleClose = () => {
+    setOpen(false);
+    };
     const onChangeHandler = ({
         titleChangeHandler:titleChangeHandler,
         contentChangeHandler:contentChangeHandler,
         imageChangeHandler:imageChangeHandler,
         cardContentChangeHandler:cardContentChangeHandler,
-        FileInputHandler:FileInputHandler
+        FileInputHandler:FileInputHandler,
+        handleClickOpen:handleClickOpen,
+        handleClose:handleClose
     });
 
     const removeHandler = (id) => {
-        // firestore
-        //     .collection("tasks")
-        //     .doc(id)
-        //     .delete()
-        //     .then(() =>
-        //     setTasks((prevTasks) =>
-        //         prevTasks.filter((prevTask) => id !== prevTask.id)
-        //     )
-        // );
+        firestore
+            .collection("boards")
+            .doc(id)
+            .delete()
+            // .then(
+            //     () =>
+            //     setBoard((prevTasks) =>
+            //         prevTasks.filter((prevTask) => prevTask.id !== id)
+            //     )
+            // );
     };
 
     const modifyHandler = (id) => {
@@ -176,12 +189,6 @@ const Board = () =>{
             <h2>
                 여기는 게시판
             </h2>
-            <BoardAdd
-                board={boards}
-                fillInput={fillInput} 
-                onChangeHandler={onChangeHandler}
-                boardAddClickHandler={boardAddClickHandler}
-            />
             {loading && <h1>Loading ...</h1>}
             {!loading && (
                 <BoardDisplay
@@ -190,6 +197,14 @@ const Board = () =>{
                 modifyHandler={modifyHandler}
                 />
             )}
+            <BoardAdd
+                board={boards}
+                fillInput={fillInput}
+                progress={progress}
+                onChangeHandler={onChangeHandler}
+                boardAddClickHandler={boardAddClickHandler}
+                open={open}
+            />
         </div>  
     );
 }

@@ -8,11 +8,37 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 
 // import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
+function LinearProgressWithLabel(props) {
+  return (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box minWidth={35}>
+        <Typography variant="body2" color="textSecondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+LinearProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate and buffer variants.
+   * Value between 0 and 100.
+   */
+  value: PropTypes.number.isRequired,
+};
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -29,34 +55,25 @@ const useStyles = makeStyles((theme) => ({
     maxWidth:"1080px",
   },
   fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+    position: 'fixed',
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
   },
 }));
 
-const BoardAdd = ({ board,fillInput, onChangeHandler, boardAddClickHandler }) => {
+const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHandler,open }) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [seletedFile , setSeletedFile ] = useState(null);
-  const [url, setUrl] = useState("");
-  const [progress, setProgress] = useState(0);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [togle, setTogle] = useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <>
-      <Fab color="primary" aria-label="add" className={classes.fab} onClick={handleClickOpen}>
+      <Fab color="primary" aria-label="add" className={classes.fab} onClick={onChangeHandler.handleClickOpen}>
         <AddIcon />
       </Fab>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={onChangeHandler.handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -115,17 +132,22 @@ const BoardAdd = ({ board,fillInput, onChangeHandler, boardAddClickHandler }) =>
                   :
                   <p>{"파일 선택 하지 않음"}</p>
                 }
+                {
+                  togle?
+                  <LinearProgressWithLabel value={progress} />
+                  :""
+                }
               </Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={onChangeHandler.handleClose} color="primary">
               {"취소"}
             </Button>
             <Button
               color="primary"
               onClick={(e) => {
-                  setOpen(false);
+                  setTogle(!togle);
                   return boardAddClickHandler(e);
                 }
               }

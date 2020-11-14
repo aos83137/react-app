@@ -7,7 +7,9 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 // import SaveIcon from '@material-ui/icons/Save';
-// import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Box from '@material-ui/core/Box';
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) =>({
   root:{
@@ -17,8 +19,7 @@ const useStyles = makeStyles((theme) =>({
     marginBottom:theme.spacing(3),
   },
   media:{
-    height:0,
-    paddingTop: '56.25%', //16:9
+    height:"500px",
   },
   expend:{
     transform: 'rotate(0deg)',
@@ -85,17 +86,30 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
             <Typography className={classes.secondaryHeading}>{boardDateForm(board.timeCreated.seconds*1000)}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <div>
-                    <div>
+                <Box>
+                    <Box>
                         <p>머릿말</p>
-                    </div>
-                    <div>
-                        <img src={board.image} alt="card_image"/>
-                    </div>
-                    <Typography>
-                        {board.content}
-                    </Typography>
-                </div>
+                    </Box>
+                    <Box>
+                        <img src={board.image} className={classes.media} alt="card_image"/>
+                    </Box>
+                    <Box>
+                      <Typography>
+                          {board.content}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Button
+                        startIcon={<DeleteIcon/>}
+                        onClick={(e)=>{
+                          console.log('삭제됨');
+                          return removeHandler(board.id);
+                        }}
+                      >
+                        삭제
+                      </Button>
+                    </Box>
+                </Box>
             </AccordionDetails>
           </Accordion>
       ))}
