@@ -61,9 +61,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHandler,open }) => {
+const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHandler,open,togle}) => {
   const classes = useStyles();
-  const [togle, setTogle] = useState(false);
 
 
   return (
@@ -147,7 +146,6 @@ const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHan
             <Button
               color="primary"
               onClick={(e) => {
-                  setTogle(!togle);
                   return boardAddClickHandler(e);
                 }
               }

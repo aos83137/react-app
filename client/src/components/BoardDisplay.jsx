@@ -103,7 +103,7 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                         startIcon={<DeleteIcon/>}
                         onClick={(e)=>{
                           console.log('삭제됨');
-                          return removeHandler(board.id);
+                          return removeHandler(board.id, board.imageName);
                         }}
                       >
                         삭제

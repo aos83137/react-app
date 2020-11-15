@@ -14,10 +14,10 @@ const Board = () =>{
     });
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
-    // const [fillInput , setSeletedFile ] = useState(null);
     const [progress, setProgress] = useState(0);
     const [fillInput, setFillInput] = useState("");
     const [open, setOpen] = React.useState(false);
+    const [togle, setTogle] = useState(false);
 
     const fetchData = useCallback(() => {
         // let tasksData = [];
@@ -33,6 +33,7 @@ const Board = () =>{
                         id:doc.id, 
                         title:doc.data().title,
                         image:doc.data().image, 
+                        imageName:doc.data().imageName,
                         content: doc.data().content,
                         cardContent: doc.data().cardContent,
                         whose:doc.data().whose,
@@ -54,6 +55,7 @@ const Board = () =>{
             .add({ 
                 title:board.title,
                 image:url, 
+                imageName:fillInput.name,
                 content: board.content,
                 cardContent: board.cardContent,
                 whose:"YongSeok",
@@ -64,12 +66,14 @@ const Board = () =>{
                     id:res.id,
                     title:board.title,
                     image:url, 
+                    imageName:fillInput.name,
                     content: board.content,
                     cardContent: board.cardContent,
                     whose:"YongSeok",
                  }));
             }).then((e)=>{
                 alert("저장 완료");
+                setTogle(false);
                 setOpen(false);
             });
             setBoard({
@@ -83,6 +87,8 @@ const Board = () =>{
     const boardAddClickHandler = (e) => {
         e.preventDefault();
         // console.log('in board selectedFile.name', fillinput.name);
+        setTogle(true);
+        setFillInput("");
         const uploadTask = storageService.ref(`images/${fillInput.name}`).put(fillInput);
         uploadTask.on(
             "state_changed",
@@ -94,7 +100,21 @@ const Board = () =>{
               setProgress(progress);
             },
             error => {
-              console.log(error);
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                    // User doesn't have permission to access the object
+                    break;
+                
+                    case 'storage/canceled':
+                    // User canceled the upload
+                    break;
+                            
+                    case 'storage/unknown':
+                    // Unknown error occurred, inspect error.serverResponse
+                    break;
+                }
             },
             () => {
                 storageService
@@ -155,11 +175,38 @@ const Board = () =>{
         handleClose:handleClose
     });
 
-    const removeHandler = (id) => {
-        firestore
+    const removeHandler = (id,imageName) => {
+        console.log('this removeHandler - imageName:', imageName);
+        console.log('this removeHandler - imageName:', imageName);
+        const desertRef = storageService.ref(`images/${imageName}`);
+        desertRef.delete().then(()=>{
+            // File deleted successfully
+            firestore
             .collection("boards")
             .doc(id)
             .delete()
+            .then(()=>{
+                alert("삭제 성공");
+            });
+        }).catch(function(error) {
+            // Uh-oh, an error occurred!
+            console.log('삭제 에러',error);
+            switch (error.code) {
+                case "storage/object-not-found":
+                    firestore
+                    .collection("boards")
+                    .doc(id)
+                    .delete()
+                    .then(()=>{
+                        alert("삭제 성공");
+                    })
+                    break;
+                default:
+                    break;
+            }
+        });
+
+
             // .then(
             //     () =>
             //     setBoard((prevTasks) =>
@@ -204,6 +251,7 @@ const Board = () =>{
                 onChangeHandler={onChangeHandler}
                 boardAddClickHandler={boardAddClickHandler}
                 open={open}
+                togle={togle}
             />
         </div>  
     );
