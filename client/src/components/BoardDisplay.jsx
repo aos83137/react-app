@@ -8,8 +8,12 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 // import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Create from '@material-ui/icons/Create';
 import Box from '@material-ui/core/Box';
 import Button from "@material-ui/core/Button";
+
+import UpdateDialog from './UpdateDialog';
+
 
 const useStyles = makeStyles((theme) =>({
   root:{
@@ -70,6 +74,7 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
     const form = `${year}-${month}-${date} ${hour}:${min}`;
     return form;
   }
+
   return (
     <div className={classes.root}>
       {boards.map((board) => (
@@ -98,7 +103,16 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                           {board.content}
                       </Typography>
                     </Box>
-                    <Box>
+                    <Box z>
+                      <Button
+                        startIcon={<Create/>}
+                        onClick={(e)=>{
+                          console.log('삭제됨');
+                          return removeHandler(board.id, board.imageName);
+                        }}
+                      >
+                        수정
+                      </Button>
                       <Button
                         startIcon={<DeleteIcon/>}
                         onClick={(e)=>{
@@ -108,6 +122,7 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                       >
                         삭제
                       </Button>
+                      <UpdateDialog/>
                     </Box>
                 </Box>
             </AccordionDetails>

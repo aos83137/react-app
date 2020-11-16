@@ -114,6 +114,9 @@ const Board = () =>{
                     case 'storage/unknown':
                     // Unknown error occurred, inspect error.serverResponse
                     break;
+
+                    default:
+                    break;
                 }
             },
             () => {

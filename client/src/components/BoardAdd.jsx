@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -87,8 +87,10 @@ const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHan
             <Grid container spacing={2} alignItems="center" justify="center" direction="column">
               <Grid item>
                 <TextField
+                  autoFocus
                   id="standard-basic"
                   label="title"
+                  fullWidth
                   onChange={onChangeHandler.titleChangeHandler}
                 />
               </Grid>
