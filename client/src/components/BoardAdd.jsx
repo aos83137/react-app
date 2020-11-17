@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(3),
     right: theme.spacing(3),
   },
+  dialogStyle:{
+    width:'1000px'
+  }
 }));
 
 const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHandler,open,togle}) => {
@@ -74,7 +77,6 @@ const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHan
         open={open}
         onClose={onChangeHandler.handleClose}
         aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">{"글 등록"}</DialogTitle>
         <form
@@ -83,35 +85,38 @@ const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHan
           autoComplete="off"
           onSubmit={(e) => boardAddClickHandler(e)}
         >
-          <DialogContent>
-            <Grid container spacing={2} alignItems="center" justify="center" direction="column">
-              <Grid item>
+          <DialogContent >
                 <TextField
                   autoFocus
                   id="standard-basic"
                   label="title"
                   fullWidth
                   onChange={onChangeHandler.titleChangeHandler}
+                  margin="dense"
+
                 />
-              </Grid>
-              <Grid item>
+
                 <TextField
                   id="outlined-multiline-static"
                   label="content"
                   multiline
                   rows={6}
                   variant="outlined"
+                  fullWidth
                   onChange={onChangeHandler.contentChangeHandler}
+                  margin="dense"
+
                 />
-              </Grid>
-              <Grid item>
+
                 <TextField
                   id="standard-basic"
                   label="cardContent"
+                  fullWidth
                   onChange={onChangeHandler.cardContentChangeHandler}
+                  margin="dense"
+
                 />
-              </Grid>
-              <Grid item>
+
                 <input
                   accept="image/*"
                   className={classes.input}
@@ -138,8 +143,7 @@ const BoardAdd = ({ board,fillInput, progress, onChangeHandler, boardAddClickHan
                   <LinearProgressWithLabel value={progress} />
                   :""
                 }
-              </Grid>
-            </Grid>
+
           </DialogContent>
           <DialogActions>
             <Button onClick={onChangeHandler.handleClose} color="primary">

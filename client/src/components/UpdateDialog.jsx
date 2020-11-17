@@ -7,6 +7,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Create from '@material-ui/icons/Create';
+
+
 export default function UpdateDialog() {
   const [open, setOpen] = React.useState(false);
 
@@ -19,17 +22,13 @@ export default function UpdateDialog() {
   };
 
   return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open form dialog
+    <>
+      <Button startIcon={<Create/>} variant="outlined" color="primary" onClick={handleClickOpen}>
+        수정
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">글 수정</DialogTitle>
         <DialogContent>
-            <DialogContentText>
-                To subscribe to this website, please enter your email address here. We will send updates
-                occasionally.
-            </DialogContentText>
             {/* <TextField
                 autoFocus
                 margin="dense"
@@ -78,13 +77,13 @@ export default function UpdateDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            취소
           </Button>
           <Button onClick={handleClose} color="primary">
-            Subscribe
+            수정
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

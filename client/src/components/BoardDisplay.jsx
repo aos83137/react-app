@@ -122,7 +122,7 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                       >
                         삭제
                       </Button>
-                      <UpdateDialog/>
+                      <UpdateDialog board={false}/>
                     </Box>
                 </Box>
             </AccordionDetails>
