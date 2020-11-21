@@ -4,15 +4,17 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Create from '@material-ui/icons/Create';
 
 
-export default function UpdateDialog() {
+function UpdateDialog(data) {
   const [open, setOpen] = React.useState(false);
-
+  const board = data.data;
+  const onChangeHandler = data.onChangeHandler;
+  const modifyHandler=data.modifyHandler;
+  const fieldData = data.fieldData;
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -26,37 +28,33 @@ export default function UpdateDialog() {
       <Button startIcon={<Create/>} variant="outlined" color="primary" onClick={handleClickOpen}>
         수정
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" key={"ltet"}>
         <DialogTitle id="form-dialog-title">글 수정</DialogTitle>
         <DialogContent>
-            {/* <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                fullWidth
-            /> */}
+
             <TextField
-                id="standard-basic"
                 label="title"
                 fullWidth
                 margin="dense"
+                defaultValue={board.title}
+                onChange={onChangeHandler.titleChangeHandler}
             />
             <TextField
-                id="outlined-multiline-static"
                 label="content"
                 multiline
                 rows={6}
                 // variant="outlined"
                 fullWidth
                 margin="dense"
+                defaultValue={board.content}
+                onChange={onChangeHandler.contentChangeHandler}
             />
             <TextField
-                id="standard-basic"
                 label="cardContent"
                 fullWidth
                 margin="dense"
+                defaultValue={board.cardContent}
+                onChange={onChangeHandler.cardContentChangeHandler}
             />
             <input
                 accept="image/*"
@@ -79,7 +77,14 @@ export default function UpdateDialog() {
           <Button onClick={handleClose} color="primary">
             취소
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={
+                            (e)=>{
+                              console.log('수정 시작');
+                              console.log('id,',board.id);
+                              console.log('id,',fieldData);
+                            return modifyHandler(board.id, fieldData)}
+                          } 
+                          color="primary">
             수정
           </Button>
         </DialogActions>
@@ -87,3 +92,6 @@ export default function UpdateDialog() {
     </>
   );
 }
+
+
+export default React.memo(UpdateDialog);

@@ -180,7 +180,6 @@ const Board = () =>{
 
     const removeHandler = (id,imageName) => {
         console.log('this removeHandler - imageName:', imageName);
-        console.log('this removeHandler - imageName:', imageName);
         const desertRef = storageService.ref(`images/${imageName}`);
         desertRef.delete().then(()=>{
             // File deleted successfully
@@ -208,31 +207,28 @@ const Board = () =>{
                     break;
             }
         });
-
-
-            // .then(
-            //     () =>
-            //     setBoard((prevTasks) =>
-            //         prevTasks.filter((prevTask) => prevTask.id !== id)
-            //     )
-            // );
     };
 
-    const modifyHandler = (id) => {
-        // return (e) => {
-        //     setTask("");
-        //     setModify(true);
-        //     e.target.innerText = modify ? "수정" : "완료";
-        //     if (task !== "" && modify) {
-        //     setTasks((prevTasks) =>
-        //         tasks.map((taskOne) =>
-        //         taskOne.id === id ? { ...taskOne, todo: task } : taskOne
-        //         )
-        //     );
-        //     setTask("");
-        //     setModify(false);
-        //     }
-        // };
+    const modifyHandler = (id, data) => {
+        const selectB = data;
+        console.log('됨?',id);
+        console.log('데이터는?',data);
+        firestore
+        .collection("boards")
+        .doc(id)
+        .update({ 
+            title:selectB.title,
+            content: selectB.content,
+            cardContent: selectB.cardContent,
+            whose:"YongSeok",
+            timeCreated:sFirestore.Timestamp.fromDate(new Date())
+         })
+         .then((res)=>{
+             console.log('수정 성공');
+         })
+         .catch((error)=>{
+             console.log('수정 error',error);
+         })
     };
     return(
         <div>
@@ -243,8 +239,10 @@ const Board = () =>{
             {!loading && (
                 <BoardDisplay
                 boards={boards}
+                onChangeHandler={onChangeHandler}
                 removeHandler={removeHandler}
                 modifyHandler={modifyHandler}
+                fieldData={board}
                 />
             )}
             <BoardAdd

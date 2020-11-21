@@ -12,8 +12,7 @@ import Create from '@material-ui/icons/Create';
 import Box from '@material-ui/core/Box';
 import Button from "@material-ui/core/Button";
 
-import UpdateDialog from './UpdateDialog';
-
+import UpdateDialog from './UpdateDialog'
 
 const useStyles = makeStyles((theme) =>({
   root:{
@@ -49,14 +48,12 @@ const useStyles = makeStyles((theme) =>({
   },
 }));
 
-const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
+
+
+const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel,onChangeHandler,fieldData }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
-//   const handleExpandClick = (panel,isExpanded) => {
-//     console.log('isExpanded:',isExpanded);
-//     setExpanded(isExpanded ? panel : false);
-//   };
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -103,18 +100,11 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                           {board.content}
                       </Typography>
                     </Box>
-                    <Box z>
-                      <Button
-                        startIcon={<Create/>}
-                        onClick={(e)=>{
-                          console.log('삭제됨');
-                          return removeHandler(board.id, board.imageName);
-                        }}
-                      >
-                        수정
-                      </Button>
+                    <Box>
+                      <UpdateDialog  data={board} onChangeHandler={onChangeHandler} modifyHandler={modifyHandler} fieldData={fieldData}/>
                       <Button
                         startIcon={<DeleteIcon/>}
+                        variant="outlined" color="primary"
                         onClick={(e)=>{
                           console.log('삭제됨');
                           return removeHandler(board.id, board.imageName);
@@ -122,7 +112,6 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
                       >
                         삭제
                       </Button>
-                      <UpdateDialog board={false}/>
                     </Box>
                 </Box>
             </AccordionDetails>
@@ -131,4 +120,5 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel }) => {
     </div>
   );
 };
+
 export default React.memo(BoardDisplay);
