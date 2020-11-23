@@ -27,7 +27,7 @@ import {
     Link,
     useHistory
 } from 'react-router-dom';
-import {Home,Login,Board,imstarMain, InstarMain} from '../pages';
+import {Home,Login,Board, InstarMain} from '../pages';
 
 // import { firestore } from "../firebase";
 
