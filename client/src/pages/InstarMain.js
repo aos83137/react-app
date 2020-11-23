@@ -1,25 +1,42 @@
 import React, { useState, useEffect, useCallback } from "react";
 import CardView from '../components/CardView';
 import {firestore,sFirestore, storageService} from "../firebase";
+import Add from '../components/Add';
 
 const dataSet =(doc)=>{
-    const json ={
-        id:doc.id, 
-        title:doc.data().title,
-        image:doc.data().image, 
-        imageName:doc.data().imageName,
-        content: doc.data().content,
-        cardContent: doc.data().cardContent,
-        whose:doc.data().whose,
-        timeCreated:doc.data().timeCreated,
-    }
+    let json={};
+    if(doc!=""){
+        json ={
+            id:doc.id, 
+            title:doc.data().title,
+            image:doc.data().image, 
+            imageName:doc.data().imageName,
+            content: doc.data().content,
+            whose:doc.data().whose,
+            timeCreated:doc.data().timeCreated,
+        }
+    }else(
+        json ={
+            title:"",
+            image:"", 
+            imageName:"",
+            content: "",
+            whose:"",
+        }
+    )
+    
     return json;
 }
 
 const InstarMain = () =>{
     //변수
+    const [board, setBoard] = useState(dataSet(""));
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [openAddDialog, setOpen] = useState(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const [togle, setTogle] = useState(false);
     //변수
 
     ///use Efect
@@ -44,6 +61,11 @@ const InstarMain = () =>{
         }, [fetchData]);
     ///use Efect
 
+
+    //function
+
+    
+    //function
     return (
         <div>
             <h2>
@@ -54,6 +76,7 @@ const InstarMain = () =>{
                     <CardView data={board}/>
                 ))}
             </div>
+            <Add/>
         </div>
     );
 }

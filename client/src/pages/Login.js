@@ -1,4 +1,4 @@
-import React,{useState,useEffect } from 'react';
+import React,{useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -48,10 +48,6 @@ const Login =()=>{
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    useEffect(() => {
-
-
-    }, [])
     let history = useHistory();
 
     function goLoginClick(email,password) {
