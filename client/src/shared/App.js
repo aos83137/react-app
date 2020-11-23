@@ -27,7 +27,7 @@ import {
     Link,
     useHistory
 } from 'react-router-dom';
-import {Home,Login,Board} from '../pages';
+import {Home,Login,Board,imstarMain, InstarMain} from '../pages';
 
 // import { firestore } from "../firebase";
 
@@ -270,6 +270,14 @@ export default function App() {
                           <ListItemText primary={"게시판"} />
                       </ListItem>
                   </Link>
+                  <Link to="/instarMain" className={classes.linkType}>
+                      <ListItem button key={"인스타"}>
+                          <ListItemIcon>
+                              <Icon>list_alt</Icon>
+                          </ListItemIcon>                
+                          <ListItemText primary={"인스타"} />
+                      </ListItem>
+                  </Link>
               </List>
               :
               <List>
@@ -299,6 +307,7 @@ export default function App() {
                     <React.Fragment>
                       <Route exact path="/" render={auth=>(<Home/>)}/>
                       <Route path="/board" component={Board}/>
+                      <Route path="/instarMain" component={InstarMain}/>
                       {/* <Redirect path="/login" to="/" /> */}
                     </React.Fragment>
                     :

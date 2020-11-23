@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) =>({
 
 
 
-const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel,onChangeHandler,fieldData }) => {
+const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel,onChangeHandler,fieldData,fillInput,progress,togle,openUpdateDialog }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -92,16 +92,20 @@ const BoardDisplay = ({ boards, removeHandler, modifyHandler, panel,onChangeHand
                     <Box>
                         <p>머릿말</p>
                     </Box>
-                    <Box>
-                        <img src={board.image} className={classes.media} alt="card_image"/>
-                    </Box>
+                    {
+                      board.image?
+                      <Box>
+                          <img src={board.image} className={classes.media} alt="card_image"/>
+                      </Box>
+                      :"이미지 없어용"
+                    }
                     <Box>
                       <Typography>
                           {board.content}
                       </Typography>
                     </Box>
                     <Box>
-                      <UpdateDialog  data={board} onChangeHandler={onChangeHandler} modifyHandler={modifyHandler} fieldData={fieldData}/>
+                      <UpdateDialog  data={board} onChangeHandler={onChangeHandler} modifyHandler={modifyHandler} fieldData={fieldData} fillInput={fillInput} progress={progress} togle={togle} openUpdateDialog={openUpdateDialog}/>
                       <Button
                         startIcon={<DeleteIcon/>}
                         variant="outlined" color="primary"

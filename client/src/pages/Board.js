@@ -16,7 +16,8 @@ const Board = () =>{
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [fillInput, setFillInput] = useState("");
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
     const [togle, setTogle] = useState(false);
 
     const fetchData = useCallback(() => {
@@ -164,9 +165,15 @@ const Board = () =>{
     const handleClickOpen = () => {
         setOpen(true);
     };
-    
+    const updateDialoghandleClickOpen = () => {
+        setOpenUpdateDialog(true);
+    };
     const handleClose = () => {
     setOpen(false);
+    };
+
+    const updateDialogHandleClose = () => {
+        setOpenUpdateDialog(false);
     };
     const onChangeHandler = ({
         titleChangeHandler:titleChangeHandler,
@@ -175,9 +182,11 @@ const Board = () =>{
         cardContentChangeHandler:cardContentChangeHandler,
         FileInputHandler:FileInputHandler,
         handleClickOpen:handleClickOpen,
-        handleClose:handleClose
+        handleClose:handleClose,
+        updateDialogHandleClose:updateDialogHandleClose,
+        updateDialoghandleClickOpen:updateDialoghandleClickOpen
     });
-
+    
     const removeHandler = (id,imageName) => {
         console.log('this removeHandler - imageName:', imageName);
         const desertRef = storageService.ref(`images/${imageName}`);
@@ -213,22 +222,51 @@ const Board = () =>{
         const selectB = data;
         console.log('됨?',id);
         console.log('데이터는?',data);
-        firestore
-        .collection("boards")
-        .doc(id)
-        .update({ 
-            title:selectB.title,
-            content: selectB.content,
-            cardContent: selectB.cardContent,
-            whose:"YongSeok",
-            timeCreated:sFirestore.Timestamp.fromDate(new Date())
-         })
-         .then((res)=>{
-             console.log('수정 성공');
-         })
-         .catch((error)=>{
-             console.log('수정 error',error);
-         })
+        setTogle(true);
+        setFillInput("");
+        const uploadTask = storageService.ref(`images/${fillInput.name}`).put(fillInput);
+        
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              console.log('progress -',progress); // 잘되고
+              setProgress(progress);
+            },
+            error => {
+            },
+            () => {
+                storageService
+                    .ref("images")
+                    .child(fillInput.name)
+                    .getDownloadURL()
+                    .then(url => {
+                        console.log('fire stroe 넣음 (수정)- url: ',url);
+                        firestore
+                        .collection("boards")
+                        .doc(id)
+                        .update({ 
+                            title:selectB.title,
+                            content: selectB.content,
+                            cardContent: selectB.cardContent,
+                            image:url, 
+                            imageName:fillInput.name,
+                            whose:"YongSeok",
+                            timeCreated:sFirestore.Timestamp.fromDate(new Date())
+                         })
+                         .then((res)=>{
+                            alert('수정 성공');
+                            setTogle(false);
+                            setOpenUpdateDialog(false);
+                        })
+                         .catch((error)=>{
+                             console.log('수정 error',error);
+                         })                    });
+            }
+          ); 
+
     };
     return(
         <div>
@@ -243,6 +281,10 @@ const Board = () =>{
                 removeHandler={removeHandler}
                 modifyHandler={modifyHandler}
                 fieldData={board}
+                fillInput={fillInput}
+                progress={progress}
+                togle={togle}
+                openUpdateDialog={openUpdateDialog}
                 />
             )}
             <BoardAdd
