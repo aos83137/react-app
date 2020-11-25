@@ -54,7 +54,7 @@ const InstarMain = () =>{
                 })
                 setBoards(boardData);
                 setLoading(false);
-          })
+          });
       }, []);
     useEffect(() => {
         fetchData();

@@ -110,6 +110,14 @@ const BoardAdd = () =>{
     };
     const addButtonClickEvent=(e)=>{
         console.log('board',board);
+        e.preventDefault();
+        let imageSet=[];
+        board.imageName.map((imageName)=>{
+            console.log('imageName:',imageName);
+            imageSet.push(imageName);
+        });
+        console.log('board end',imageSet);
+        // const uploadTask = storageService.ref(`images/${board.imageName}`).put(fillInput);
     }
     //function
     return (
