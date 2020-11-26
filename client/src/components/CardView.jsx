@@ -78,7 +78,6 @@ export default function CardView({data}) {
 
   return (
     <Card className={classes.root}>
-        {console.log('data',data)}
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
@@ -98,11 +97,12 @@ export default function CardView({data}) {
       })} */}
       <CardMedia
         className={classes.media}
-        image={data.image[2]}
+        image={data.image[0]}
         title="Paella dish"
       />
       <CardContent>
         <Typography variant="body1" color="textSecondary" component="p">
+          {data.whose+" - "}
           {data.content}
         </Typography>
         <Divider/>

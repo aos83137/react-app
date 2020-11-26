@@ -117,11 +117,15 @@ const BoardAdd = () =>{
         console.log('board',board);
         e.preventDefault();
         let imageSet=[];
+        let nameSet =[];
         let flag=false;
-        await board.imageName.map((imageName)=>{
-            console.log('imageName:',imageName);
+        await board.imageName.map((file)=>{
+            console.log('imageName:',file);
+            let now=new Date();
+            let imageName = file.name.split('.')[0]+"_"+now.getTime()+"."+file.name.split('.')[1];
+            console.log(imageName);
             //////////
-            const uploadTask = storageService.ref(`images/${imageName.name}`).put(imageName);
+            const uploadTask = storageService.ref(`images/${imageName}`).put(file);
             uploadTask.on(
                 "state_changed",
                 snapshot => {
@@ -154,11 +158,12 @@ const BoardAdd = () =>{
                 () => {
                     storageService
                         .ref("images")
-                        .child(imageName.name)
+                        .child(imageName)
                         .getDownloadURL()
                         .then(url => {
                             console.log('fire stroe 넣음 - url: ',url);
                             imageSet.push(url);
+                            nameSet.push(imageName);
                             //이값을 리얼타임에 넣고 가져온다.
                             console.log('imageSet',imageSet);
                             console.log('cnt-',cnt,'start-',start);
@@ -179,11 +184,7 @@ const BoardAdd = () =>{
             if(flag){
                 console.log('imageSet',board);
                 console.log('imageSet',imageSet);
-                let nameSet =[];
-                board.imageName.map((data)=>{
-                    nameSet.push(data.name);
-                })
-                console.log(nameSet);
+                console.log('nameSet',nameSet);
                 if(board !== ""){
                     firestore
                     .collection("boards")
@@ -212,7 +213,7 @@ const BoardAdd = () =>{
                     }
                 })
             }
-        },1500*cnt);
+        },3000*cnt);
     }
     //function
     return (

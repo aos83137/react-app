@@ -73,7 +73,7 @@ const InstarMain = () =>{
             </h2>
             <div>
                 {boards.map((board)=>(
-                    <CardView data={board}/>
+                    <CardView data={board} key={board.id}/>
                 ))}
             </div>
             <Add/>
