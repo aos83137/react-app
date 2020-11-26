@@ -10,6 +10,7 @@ import {DropzoneArea} from 'material-ui-dropzone'
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import {  useHistory } from 'react-router-dom';
 
 //firebase
 import {firestore,sFirestore, storageService,authService} from "../firebase";
@@ -30,7 +31,7 @@ const dataSet =(doc)=>{
     }else(
         json ={
             title:"",
-            image:"", 
+            image:[], 
             imageName:"",
             content: "",
             whose:"",
@@ -50,6 +51,8 @@ const BoardAdd = () =>{
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
     const [togle, setTogle] = useState(false);
     const [files, setFiles] = useState([]);
+    const [cnt, setCnt] = useState(0);
+    let history = useHistory();
 
     // const [auth, setAuth] = useState(false);//안필요할거같은데?..
 
@@ -106,18 +109,110 @@ const BoardAdd = () =>{
     const imageChangeHandler = (e) => {
         // console.log('image',e.target.value);
         console.log('e',e);
+        setCnt(e.length);
         setBoard({...board,imageName:e});
     };
-    const addButtonClickEvent=(e)=>{
+    const addButtonClickEvent=async(e)=>{
+        let start = 0;
         console.log('board',board);
         e.preventDefault();
         let imageSet=[];
-        board.imageName.map((imageName)=>{
+        let flag=false;
+        await board.imageName.map((imageName)=>{
             console.log('imageName:',imageName);
-            imageSet.push(imageName);
+            //////////
+            const uploadTask = storageService.ref(`images/${imageName.name}`).put(imageName);
+            uploadTask.on(
+                "state_changed",
+                snapshot => {
+                  const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                  );
+                  console.log('progress -',progress); // 잘되고
+                  setProgress(progress);
+                },
+                error => {
+                    // A full list of error codes is available at
+                    // https://firebase.google.com/docs/storage/web/handle-errors
+                    switch (error.code) {
+                        case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        break;
+                    
+                        case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+                                
+                        case 'storage/unknown':
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+    
+                        default:
+                        break;
+                    }
+                },
+                () => {
+                    storageService
+                        .ref("images")
+                        .child(imageName.name)
+                        .getDownloadURL()
+                        .then(url => {
+                            console.log('fire stroe 넣음 - url: ',url);
+                            imageSet.push(url);
+                            //이값을 리얼타임에 넣고 가져온다.
+                            console.log('imageSet',imageSet);
+                            console.log('cnt-',cnt,'start-',start);
+                            if(cnt>start+1){
+                                start++;
+                            }else{
+                                flag = true;
+                                console.log('flag',flag);
+                            }
+                        })
+                }
+              );
+            ///////////////////
         });
-        console.log('board end',imageSet);
-        // const uploadTask = storageService.ref(`images/${board.imageName}`).put(fillInput);
+        // await alert("저장 완료");
+        // await history.push("/instarMain");
+        setTimeout(()=>{
+            if(flag){
+                console.log('imageSet',board);
+                console.log('imageSet',imageSet);
+                let nameSet =[];
+                board.imageName.map((data)=>{
+                    nameSet.push(data.name);
+                })
+                console.log(nameSet);
+                if(board !== ""){
+                    firestore
+                    .collection("boards")
+                    .add({
+                        title:board.title,
+                        image:imageSet,
+                        imageName:nameSet,
+                        content: board.content,
+                        whose:board.whose,
+                        timeCreated:sFirestore.Timestamp.fromDate(new Date())
+                    })
+                    .then((res)=>{
+                        console.log('잘되나ㅣ');
+                        alert('저장 완료');
+                        history.push('/instarMain');
+                    }).catch((e)=>{
+                        console.log('e',e);
+                    })
+                }
+            }else{
+                setTimeout(()=>{
+                    if(flag){
+                        console.log('imageSet',imageSet);
+                    }else{
+                        console.log("너무 느려서 안되네요 미안해요 ㅎㅎ;");
+                    }
+                })
+            }
+        },1500*cnt);
     }
     //function
     return (

@@ -93,9 +93,12 @@ export default function CardView({data}) {
         title={data.title}
         subheader={boardDateForm(data.timeCreated.seconds*1000)}
       />
+      {/* {data.image.map(()=>{
+
+      })} */}
       <CardMedia
         className={classes.media}
-        image="https://firebasestorage.googleapis.com/v0/b/myreactapp83137.appspot.com/o/images%2Fimg3.jpg?alt=media&token=7336e5ee-5d79-4b27-907c-e362a1763fb5"
+        image={data.image[2]}
         title="Paella dish"
       />
       <CardContent>
