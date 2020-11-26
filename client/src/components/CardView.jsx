@@ -18,6 +18,11 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 
+//
+import Carousel from 'nuka-carousel';
+
+//
+
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 614,
@@ -92,14 +97,19 @@ export default function CardView({data}) {
         title={data.title}
         subheader={boardDateForm(data.timeCreated.seconds*1000)}
       />
-      {/* {data.image.map(()=>{
 
-      })} */}
       <CardMedia
         className={classes.media}
         image={data.image[0]}
         title="Paella dish"
       />
+      <Carousel>
+        <img src={data.image[0]} />
+        <img src={data.image[1]} />
+        <img src={data.image[2]} />
+        <img src={data.image[3]} />
+        <img src={data.image[4]} />
+      </Carousel>
       <CardContent>
         <Typography variant="body1" color="textSecondary" component="p">
           {data.whose+" - "}
