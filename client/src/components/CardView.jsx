@@ -20,7 +20,8 @@ import Grid from '@material-ui/core/Grid';
 
 //
 import Carousel from 'nuka-carousel';
-
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 //
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 614,
-    paddingTop: '56.25%', // 16:9
+    // paddingTop: '56.25%', // 16:9
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -77,9 +78,8 @@ const boardDateForm =(d)=>{
     return form;
 }
 
-export default function CardView({data}) {
+export default function CardView({data,onChangeHandler,varCollection}) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
 
   return (
     <Card className={classes.root}>
@@ -90,25 +90,20 @@ export default function CardView({data}) {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" onClick={onChangeHandler.cardViewHandleClick}>
             <MoreVertIcon />
           </IconButton>
         }
         title={data.title}
         subheader={boardDateForm(data.timeCreated.seconds*1000)}
       />
-
-      <CardMedia
-        className={classes.media}
-        image={data.image[0]}
-        title="Paella dish"
-      />
-      <Carousel>
-        <img src={data.image[0]} />
-        <img src={data.image[1]} />
-        <img src={data.image[2]} />
-        <img src={data.image[3]} />
-        <img src={data.image[4]} />
+      <Carousel
+      >
+        <img src={data.image[0]} className={classes.media}/>
+        <img src={data.image[1]} className={classes.media}/>
+        <img src={data.image[2]} className={classes.media}/>
+        <img src={data.image[3]} className={classes.media}/>
+        <img src={data.image[4]} className={classes.media}/>
       </Carousel>
       <CardContent>
         <Typography variant="body1" color="textSecondary" component="p">
@@ -156,6 +151,20 @@ export default function CardView({data}) {
             </Grid>
         </Grid>
       </div>
+      <Menu
+        id="simple-menu"
+        anchorEl={varCollection.anchorEl}
+        keepMounted
+        open={Boolean(varCollection.anchorEl)}
+        onClose={onChangeHandler.cardViewHandleClose}
+      >
+        <MenuItem onClick={onChangeHandler.goUpdateHandle}>수정</MenuItem>
+        <MenuItem onClick={()=>{
+          return onChangeHandler.goDeleteHandle(data.id,data.imageName)
+        }}>
+          삭제
+        </MenuItem>
+      </Menu>
     </Card>
   );
 }

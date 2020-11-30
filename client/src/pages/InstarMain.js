@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import CardView from '../components/CardView';
 import {firestore,sFirestore, storageService} from "../firebase";
 import Add from '../components/Add';
+import {  useHistory } from 'react-router-dom';
 
 const dataSet =(doc)=>{
     let json={};
@@ -34,9 +35,14 @@ const InstarMain = () =>{
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [openAddDialog, setOpen] = useState(false);
-    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-    const [togle, setTogle] = useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const varCollection = {
+        anchorEl:anchorEl,
+        progress:progress,
+        loading:loading,
+    }
+    let history = useHistory();
     //변수
 
     ///use Efect
@@ -63,8 +69,53 @@ const InstarMain = () =>{
 
 
     //function
+    const goUpdateHandle=()=>{
+        console.log('goUpdateHandle');
+    }
+    const goDeleteHandle=(id,imageName)=>{
+        console.log('delete handler');
+        console.log('this removeHandler - imageName:', imageName);
+        imageName.map((data)=>{
+            const deserRef = storageService.ref(`images/${data}`);
+            deserRef.delete().then((d)=>{
+                console.log('삭제 성공',d);
+            })
+            .catch((error)=>{
+                // Uh-oh, an error occurred!
+                console.log('삭제 에러',error);
+                switch (error.code) {
+                    case "storage/object-not-found":
+                        console.log('storage/object-not-found');
+                        break;
+                    default:
+                        break;
+                }
+            })
+        })
+        firestore
+        .collection("boards")
+        .doc(id)
+        .delete()
+        .then(()=>{
+            alert("삭제 했습니다.");
+            history.push("/instarMain")
+        })
+    }
+    const cardViewHandleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-    
+    const cardViewHandleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const onChangeHandler = ({
+        // titleChangeHandler:titleChangeHandler,
+        goUpdateHandle:goUpdateHandle,
+        goDeleteHandle:goDeleteHandle,
+        cardViewHandleClick:cardViewHandleClick,
+        cardViewHandleClose:cardViewHandleClose,
+    });   
     //function
     return (
         <div>
@@ -73,7 +124,7 @@ const InstarMain = () =>{
             </h2>
             <div>
                 {boards.map((board)=>(
-                    <CardView data={board} key={board.id}/>
+                    <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
                 ))}
             </div>
             <Add/>

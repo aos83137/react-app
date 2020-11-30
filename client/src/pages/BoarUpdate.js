@@ -41,7 +41,7 @@ const dataSet =(doc)=>{
     return json;
 }
 
-const BoardAdd = () =>{
+const BoarUpdate = () =>{
     //변수
     const [board, setBoard] = useState(dataSet(""));
     const [boards, setBoards] = useState([]);
@@ -53,7 +53,6 @@ const BoardAdd = () =>{
     const [files, setFiles] = useState([]);
     const [cnt, setCnt] = useState(0);
     let history = useHistory();
-    let now=new Date();
 
     // const [auth, setAuth] = useState(false);//안필요할거같은데?..
 
@@ -122,6 +121,7 @@ const BoardAdd = () =>{
         let flag=false;
         await board.imageName.map((file)=>{
             console.log('imageName:',file);
+            let now=new Date();
             let imageName = file.name.split('.')[0]+"_"+now.getTime()+"."+file.name.split('.')[1];
             console.log(imageName);
             //////////
@@ -194,7 +194,7 @@ const BoardAdd = () =>{
                         imageName:nameSet,
                         content: board.content,
                         whose:board.whose,
-                        timeCreated:sFirestore.Timestamp.fromDate(now)
+                        timeCreated:sFirestore.Timestamp.fromDate(new Date())
                     })
                     .then((res)=>{
                         console.log('잘되나ㅣ');
@@ -246,4 +246,4 @@ const BoardAdd = () =>{
     );
 }
 
-export default BoardAdd;
+export default BoarUpdate;
