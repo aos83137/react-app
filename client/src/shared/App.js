@@ -27,7 +27,7 @@ import {
     Link,
     useHistory
 } from 'react-router-dom';
-import {Home,Login,Board, InstarMain,BoardAdd} from '../pages';
+import {Home,Login,Board, InstarMain,BoardAdd,BoardUpdate} from '../pages';
 
 // import { firestore } from "../firebase";
 
@@ -309,6 +309,7 @@ export default function App() {
                       <Route path="/board" component={Board}/>
                       <Route exact path="/instarMain" component={InstarMain}/>
                       <Route exact path="/instarMain/create"component={BoardAdd}/>
+                      <Route exact path="/instarMain/update"component={BoardUpdate}/>
                       {/* <Redirect path="/login" to="/" /> */}
                     </React.Fragment>
                     :

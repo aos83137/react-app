@@ -4,13 +4,8 @@ import Add from '../components/Add';
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import LinearProgress from '@material-ui/core/LinearProgress';
-import {DropzoneArea} from 'material-ui-dropzone'
-
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import PropTypes from 'prop-types';
 import {  useHistory } from 'react-router-dom';
+import Close from '@material-ui/icons/Close';
 
 //firebase
 import {firestore,sFirestore, storageService,authService} from "../firebase";
@@ -41,7 +36,7 @@ const dataSet =(doc)=>{
     return json;
 }
 
-const BoarUpdate = () =>{
+const BoarUpdate = ({data}) =>{
     //변수
     const [board, setBoard] = useState(dataSet(""));
     const [boards, setBoards] = useState([]);
@@ -218,6 +213,7 @@ const BoarUpdate = () =>{
     //function
     return (
         <div>
+            <h2>게시판 수정</h2>
             <TextField
                   autoFocus
                   id="standard-basic"
@@ -236,9 +232,17 @@ const BoarUpdate = () =>{
                   onChange={contentChangeHandler}
                   margin="dense"
             />
-            <DropzoneArea
-                onChange={imageChangeHandler.bind(this)}
-            />
+            { 
+              board.imageName?
+              <div>
+                  <Button startIcon={<Close/>} 
+                //   onClick={(e)=>deleteImage(board)}
+                  >
+                    {board.imageName}
+                  </Button>
+              </div>
+              :""
+            }
             <Button onClick={addButtonClickEvent}>
                 +
             </Button>

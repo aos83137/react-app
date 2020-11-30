@@ -34,13 +34,10 @@ const InstarMain = () =>{
     const [board, setBoard] = useState(dataSet(""));
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [progress, setProgress] = useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const varCollection = {
         anchorEl:anchorEl,
-        progress:progress,
-        loading:loading,
     }
     let history = useHistory();
     //변수
@@ -60,6 +57,10 @@ const InstarMain = () =>{
                 })
                 setBoards(boardData);
                 setLoading(false);
+          })
+          .catch((e)=>{
+              console.log('데이터 없나봐요',e);
+              setLoading(true);
           });
       }, []);
     useEffect(() => {
@@ -122,12 +123,22 @@ const InstarMain = () =>{
             <h2>
                 여기는 인스타
             </h2>
-            <div>
-                {boards.map((board)=>(
-                    <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
-                ))}
-            </div>
-            <Add/>
+            {
+                loading?
+                <div>
+                    <h2>Loading...</h2>
+                </div>    
+                :
+                <>
+                    <div>
+                        {boards.map((board)=>(
+                            <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
+                        ))}
+                    </div>
+                    <Add/>
+                </>
+            }
+            
         </div>
     );
 }
