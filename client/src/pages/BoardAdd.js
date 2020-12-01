@@ -57,13 +57,7 @@ const dataSet =(doc)=>{
 const BoardAdd = () =>{
     //변수
     const [board, setBoard] = useState(dataSet(""));
-    const [boards, setBoards] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [openAddDialog, setOpen] = useState(false);
-    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-    const [togle, setTogle] = useState(false);
-    const [files, setFiles] = useState([]);
     const [cnt, setCnt] = useState(0);
     let history = useHistory();
     let now=new Date();
@@ -73,27 +67,11 @@ const BoardAdd = () =>{
     //변수
 
     ///use Efect
-    const fetchData = useCallback(() => {
-        // let tasksData = [];
-        let boardData = [];
-        setLoading(true);
-        firestore
-            .collection("boards")
-            .orderBy("timeCreated", "desc")
-            .get()
-            .then((docs) => {
-                docs.forEach((doc) =>{
-                    boardData.push(dataSet(doc));
-                })
-                setBoards(boardData);
-                setLoading(false);
-          })
-      }, []);
+
     const authData = useCallback(()=>{
         authService.onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
-              console.log('user info',user);
               setBoard({...board, whose:user.displayName});
             //   setAuth(user);//안필요할거같은데?,..
             } else {
@@ -104,9 +82,8 @@ const BoardAdd = () =>{
     })
 
     useEffect(() => {
-        fetchData();
         authData();
-        }, [fetchData]);
+        }, [authData]);
     ///use Efect
 
 

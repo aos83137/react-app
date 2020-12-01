@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import CardView from '../components/CardView';
 import {firestore,sFirestore, storageService} from "../firebase";
 import Add from '../components/Add';
-import {  useHistory } from 'react-router-dom';
+import {  useHistory,useRouteMatch } from 'react-router-dom';
 
 const dataSet =(doc)=>{
     let json={};
@@ -40,6 +40,7 @@ const InstarMain = () =>{
         anchorEl:anchorEl,
     }
     let history = useHistory();
+    let {path} = useRouteMatch();
     //변수
 
     ///use Efect
@@ -70,8 +71,9 @@ const InstarMain = () =>{
 
 
     //function
-    const goUpdateHandle=()=>{
+    const goUpdateHandle=(dataId)=>{
         console.log('goUpdateHandle');
+        history.push(`${path}/update/${dataId}`);
     }
     const goDeleteHandle=(id,imageName)=>{
         console.log('delete handler');

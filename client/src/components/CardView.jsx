@@ -158,9 +158,13 @@ export default function CardView({data,onChangeHandler,varCollection}) {
         open={Boolean(varCollection.anchorEl)}
         onClose={onChangeHandler.cardViewHandleClose}
       >
-        <MenuItem onClick={onChangeHandler.goUpdateHandle}>수정</MenuItem>
         <MenuItem onClick={()=>{
-          return onChangeHandler.goDeleteHandle(data.id,data.imageName)
+          return onChangeHandler.goUpdateHandle(data.id);
+        }}>
+          수정
+        </MenuItem>
+        <MenuItem onClick={()=>{
+          return onChangeHandler.goDeleteHandle(data.id,data.imageName);
         }}>
           삭제
         </MenuItem>

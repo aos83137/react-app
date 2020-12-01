@@ -4,7 +4,7 @@ import Add from '../components/Add';
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import {  useHistory } from 'react-router-dom';
+import {  useHistory,useParams } from 'react-router-dom';
 import Close from '@material-ui/icons/Close';
 
 //firebase
@@ -39,35 +39,25 @@ const dataSet =(doc)=>{
 const BoarUpdate = ({data}) =>{
     //변수
     const [board, setBoard] = useState(dataSet(""));
-    const [boards, setBoards] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [openAddDialog, setOpen] = useState(false);
-    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-    const [togle, setTogle] = useState(false);
-    const [files, setFiles] = useState([]);
     const [cnt, setCnt] = useState(0);
     let history = useHistory();
-
-    // const [auth, setAuth] = useState(false);//안필요할거같은데?..
-
+    let {id} = useParams();
+    const getOptions = {
+        source: 'cache'
+    };    
     //변수
 
     ///use Efect
     const fetchData = useCallback(() => {
-        // let tasksData = [];
-        let boardData = [];
-        setLoading(true);
+        console.log("params id",id);
         firestore
             .collection("boards")
-            .orderBy("timeCreated", "desc")
+            .doc(id)
             .get()
-            .then((docs) => {
-                docs.forEach((doc) =>{
-                    boardData.push(dataSet(doc));
-                })
-                setBoards(boardData);
-                setLoading(false);
+            .then((doc) => {
+                console.log(doc.data());
+                setBoard(dataSet(doc));
           })
       }, []);
     const authData = useCallback(()=>{
@@ -213,11 +203,12 @@ const BoarUpdate = ({data}) =>{
     //function
     return (
         <div>
-            <h2>게시판 수정</h2>
+            <h2>게시판 수정 : {id}</h2>
             <TextField
                   autoFocus
                   id="standard-basic"
                   label="title"
+                  value={board.title}
                   fullWidth
                   onChange={titleChangeHandler}
                   margin="dense"
@@ -226,6 +217,7 @@ const BoarUpdate = ({data}) =>{
                   id="outlined-multiline-static"
                   label="content"
                   multiline
+                  value={board.content}
                   rows={6}
                   variant="outlined"
                   fullWidth
@@ -234,13 +226,18 @@ const BoarUpdate = ({data}) =>{
             />
             { 
               board.imageName?
-              <div>
-                  <Button startIcon={<Close/>} 
-                //   onClick={(e)=>deleteImage(board)}
-                  >
-                    {board.imageName}
-                  </Button>
-              </div>
+              board.imageName.map((name)=>{
+                return (
+                    <div>
+                        <Button startIcon={<Close/>} 
+                        //   onClick={(e)=>deleteImage(board)}
+                        >
+                            {name}
+                        </Button>
+                    </div>
+                );
+              })
+              
               :""
             }
             <Button onClick={addButtonClickEvent}>

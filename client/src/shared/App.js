@@ -309,7 +309,7 @@ export default function App() {
                       <Route path="/board" component={Board}/>
                       <Route exact path="/instarMain" component={InstarMain}/>
                       <Route exact path="/instarMain/create"component={BoardAdd}/>
-                      <Route exact path="/instarMain/update"component={BoardUpdate}/>
+                      <Route exact path="/instarMain/update/:id"component={BoardUpdate}/>
                       {/* <Redirect path="/login" to="/" /> */}
                     </React.Fragment>
                     :
