@@ -71,8 +71,8 @@ const InstarMain = () =>{
 
 
     //function
-    const goUpdateHandle=(dataId)=>{
-        console.log('goUpdateHandle');
+    const goUpdateHandle=(dataId,e)=>{
+        console.log('goUpdateHandle',e);
         history.push(`${path}/update/${dataId}`);
     }
     const goDeleteHandle=(id,imageName)=>{
@@ -105,6 +105,7 @@ const InstarMain = () =>{
         })
     }
     const cardViewHandleClick = (event) => {
+        console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
 
@@ -133,9 +134,9 @@ const InstarMain = () =>{
                 :
                 <>
                     <div>
-                        {boards.map((board)=>(
-                            <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
-                        ))}
+                        {/* {boards.map((board)=>( */}
+                        <CardView boards={boards} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
+                        {/* ))} */}
                     </div>
                     <Add/>
                 </>

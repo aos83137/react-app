@@ -67,20 +67,18 @@ const BoardAdd = () =>{
     //변수
 
     ///use Efect
-
     const authData = useCallback(()=>{
         authService.onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
-              setBoard({...board, whose:user.displayName});
-            //   setAuth(user);//안필요할거같은데?,..
+              console.log('user info',user.photoURL);
+            //   setBoard({...board, whose:user.displayName});
             } else {
               // User is signed out.
               // ...
             }
         });
-    })
-
+    },[])
     useEffect(() => {
         authData();
         }, [authData]);
@@ -230,6 +228,7 @@ const BoardAdd = () =>{
                   margin="dense"
             />
             <DropzoneArea
+                filesLimit={5}
                 onChange={imageChangeHandler.bind(this)}
             />
             <LinearProgressWithLabel value={progress} />

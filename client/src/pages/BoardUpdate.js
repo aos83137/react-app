@@ -72,12 +72,12 @@ const BoarUpdate = ({data}) =>{
               // ...
             }
         });
-    })
+    },[])
 
     useEffect(() => {
         fetchData();
         authData();
-        }, [fetchData]);
+        }, [fetchData,authData]);
     ///use Efect
 
 

@@ -78,79 +78,18 @@ const boardDateForm =(d)=>{
     return form;
 }
 
-export default function CardView({data,onChangeHandler,varCollection}) {
+export default function CardView({boards,onChangeHandler,varCollection}) {
   const classes = useStyles();
+  console.log('boards',boards);
+  const [expanded, setExpanded] = React.useState(false);
+  let flag=false;
+  const handleChange = (panel) => (event, isExpanded) => {
+    console.log('panel',panel);
+    setExpanded(isExpanded ? panel : false);
+  };
 
-  return (
-    <Card className={classes.root}>
-      <CardHeader
-        avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-              {data.whose[0]}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="settings" onClick={onChangeHandler.cardViewHandleClick}>
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={data.title}
-        subheader={boardDateForm(data.timeCreated.seconds*1000)}
-      />
-      <Carousel
-      >
-        <img src={data.image[0]} className={classes.media}/>
-        <img src={data.image[1]} className={classes.media}/>
-        <img src={data.image[2]} className={classes.media}/>
-        <img src={data.image[3]} className={classes.media}/>
-        <img src={data.image[4]} className={classes.media}/>
-      </Carousel>
-      <CardContent>
-        <Typography variant="body1" color="textSecondary" component="p">
-          {data.whose+" - "}
-          {data.content}
-        </Typography>
-        <Divider/>
-        <Typography display="inline" variant="caption" color="textSecondary" component="p">  
-                {"사용자 "}
-                {"좋아 보이네~~"}
-            </Typography>
-            <IconButton size={"small"} className={classes.rightSort}>
-                <FavoriteIcon/>
-            </IconButton>   
-      </CardContent>
-         
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <IconButton className={classes.rightSort}>
-            <Bookmark/>
-        </IconButton>
-      </CardActions>
-      <Divider/>
-      <div className={classes.grid}>
-        <Grid container  spacing={1}>
-            <Grid item xs={10}>
-                <InputBase 
-                    multiline
-                    rowsMax={2}
-                    fullWidth
-                    placeholder="댓글 달기..." 
-                    inputProps={{ 'aria-label': 'naked' }} 
-                    className={classes.commentFont}
-                />
-            </Grid>
-            <Grid item xs>
-                <Button className={classes.paper} >
-                    게시
-                </Button>
-            </Grid>
-        </Grid>
-      </div>
+  const menuCompo =(data)=>{
+    return (
       <Menu
         id="simple-menu"
         anchorEl={varCollection.anchorEl}
@@ -158,10 +97,10 @@ export default function CardView({data,onChangeHandler,varCollection}) {
         open={Boolean(varCollection.anchorEl)}
         onClose={onChangeHandler.cardViewHandleClose}
       >
-        <MenuItem onClick={()=>{
-          return onChangeHandler.goUpdateHandle(data.id);
+        <MenuItem onClick={(e)=>{
+          return onChangeHandler.goUpdateHandle(data.id,e);
         }}>
-          수정
+          수정{data.id}
         </MenuItem>
         <MenuItem onClick={()=>{
           return onChangeHandler.goDeleteHandle(data.id,data.imageName);
@@ -169,6 +108,120 @@ export default function CardView({data,onChangeHandler,varCollection}) {
           삭제
         </MenuItem>
       </Menu>
-    </Card>
+    );
+  }
+  return (
+    <div>
+      {boards?
+      boards.map((data)=>{
+        return (
+        <Card className={classes.root} key={data.id}>
+          <CardHeader
+            avatar={
+              <Avatar aria-label="recipe" className={classes.avatar}>
+                  {data.whose[0]}
+              </Avatar>
+            }
+            action={
+              <IconButton aria-label="settings" 
+                onClick={(e)=>{
+                  console.log('e',data.title);
+                
+                  // menuCompo(data);
+                  handleChange(data.id);
+                  flag = (expanded==data.id);
+                  // console.log('expanded',expanded);
+                  console.log('flag',flag);
+                  return onChangeHandler.cardViewHandleClick(e);
+                }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={data.title}
+            subheader={boardDateForm(data.timeCreated.seconds*1000)}
+          />
+          <Carousel
+          > 
+            {
+              data.image.map((image)=>{
+                return(
+                  <img src={image} className={classes.media} key={image}/>
+                );
+              })
+            }
+          </Carousel>
+          <CardContent>
+            <Typography variant="body1" color="textSecondary" component="p">
+              {data.whose+" - "}
+              {data.content}
+            </Typography>
+            <Divider/>
+            <Typography display="inline" variant="caption" color="textSecondary" component="p">  
+                    {"사용자 "}
+                    {"좋아 보이네~~"}
+                </Typography>
+                <IconButton size={"small"} className={classes.rightSort}>
+                    <FavoriteIcon/>
+                </IconButton>   
+          </CardContent>
+            
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="share">
+              <ShareIcon />
+            </IconButton>
+            <IconButton className={classes.rightSort}>
+                <Bookmark/>
+            </IconButton>
+          </CardActions>
+          <Divider/>
+          <div className={classes.grid}>
+            <Grid container  spacing={1}>
+                <Grid item xs={10}>
+                    <InputBase 
+                        multiline
+                        rowsMax={2}
+                        fullWidth
+                        placeholder="댓글 달기..." 
+                        inputProps={{ 'aria-label': 'naked' }} 
+                        className={classes.commentFont}
+                    />
+                </Grid>
+                <Grid item xs>
+                    <Button className={classes.paper} >
+                        게시
+                    </Button>
+                </Grid>
+            </Grid>
+          </div>
+          {
+          <Menu
+            id="simple-menu"
+            anchorEl={varCollection.anchorEl}
+            keepMounted
+            open={Boolean(varCollection.anchorEl)}
+            onClose={onChangeHandler.cardViewHandleClose}
+          >
+            <MenuItem onClick={(e)=>{
+              return onChangeHandler.goUpdateHandle(data.id,e);
+            }}>
+              수정{data.id}
+            </MenuItem>
+            <MenuItem onClick={()=>{
+              return onChangeHandler.goDeleteHandle(data.id,data.imageName);
+            }}>
+              삭제
+            </MenuItem>
+          </Menu>
+          
+          } 
+        </Card>
+      )})
+      :"loading..."
+    }
+    </div>
   );
 }
