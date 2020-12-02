@@ -134,9 +134,9 @@ const InstarMain = () =>{
                 :
                 <>
                     <div>
-                        {/* {boards.map((board)=>( */}
-                        <CardView boards={boards} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
-                        {/* ))} */}
+                        {boards.map((board)=>(
+                        <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
+                        ))}
                     </div>
                     <Add/>
                 </>

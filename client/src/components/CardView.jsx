@@ -78,24 +78,33 @@ const boardDateForm =(d)=>{
     return form;
 }
 
-export default function CardView({boards,onChangeHandler,varCollection}) {
+export default function CardView({data,onChangeHandler,varCollection}) {
   const classes = useStyles();
-  console.log('boards',boards);
   const [expanded, setExpanded] = React.useState(false);
+  ////
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const cardViewHandleClick = (event) => {
+      setAnchorEl(event.currentTarget);//button 그거 값임
+  };
+
+  const cardViewHandleClose = () => {
+      setAnchorEl(null);
+  };
+
   let flag=false;
   const handleChange = (panel) => (event, isExpanded) => {
     console.log('panel',panel);
     setExpanded(isExpanded ? panel : false);
   };
-
+  ///
   const menuCompo =(data)=>{
     return (
       <Menu
         id="simple-menu"
-        anchorEl={varCollection.anchorEl}
+        anchorEl={anchorEl}
         keepMounted
-        open={Boolean(varCollection.anchorEl)}
-        onClose={onChangeHandler.cardViewHandleClose}
+        open={Boolean(anchorEl)}
+        onClose={cardViewHandleClose}
       >
         <MenuItem onClick={(e)=>{
           return onChangeHandler.goUpdateHandle(data.id,e);
@@ -111,10 +120,6 @@ export default function CardView({boards,onChangeHandler,varCollection}) {
     );
   }
   return (
-    <div>
-      {boards?
-      boards.map((data)=>{
-        return (
         <Card className={classes.root} key={data.id}>
           <CardHeader
             avatar={
@@ -132,7 +137,7 @@ export default function CardView({boards,onChangeHandler,varCollection}) {
                   flag = (expanded==data.id);
                   // console.log('expanded',expanded);
                   console.log('flag',flag);
-                  return onChangeHandler.cardViewHandleClick(e);
+                  return cardViewHandleClick(e);
                 }}
               >
                 <MoreVertIcon />
@@ -200,10 +205,10 @@ export default function CardView({boards,onChangeHandler,varCollection}) {
           {
           <Menu
             id="simple-menu"
-            anchorEl={varCollection.anchorEl}
+            anchorEl={anchorEl}
             keepMounted
-            open={Boolean(varCollection.anchorEl)}
-            onClose={onChangeHandler.cardViewHandleClose}
+            open={Boolean(anchorEl)}
+            onClose={cardViewHandleClose}
           >
             <MenuItem onClick={(e)=>{
               return onChangeHandler.goUpdateHandle(data.id,e);
@@ -219,9 +224,5 @@ export default function CardView({boards,onChangeHandler,varCollection}) {
           
           } 
         </Card>
-      )})
-      :"loading..."
-    }
-    </div>
   );
 }

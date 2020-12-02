@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CardView from '../components/CardView';
-import Add from '../components/Add';
+
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -43,9 +42,6 @@ const BoarUpdate = ({data}) =>{
     const [cnt, setCnt] = useState(0);
     let history = useHistory();
     let {id} = useParams();
-    const getOptions = {
-        source: 'cache'
-    };    
     //변수
 
     ///use Efect
@@ -170,7 +166,7 @@ const BoarUpdate = ({data}) =>{
                 console.log('imageSet',board);
                 console.log('imageSet',imageSet);
                 console.log('nameSet',nameSet);
-                if(board !== ""){
+                if(board != ""){
                     firestore
                     .collection("boards")
                     .add({
