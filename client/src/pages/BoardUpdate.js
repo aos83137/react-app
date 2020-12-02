@@ -50,7 +50,6 @@ const BoarUpdate = () =>{
             .doc(id)
             .get()
             .then((doc) => {
-                console.log(doc.data());
                 setBoard(dataSet(doc));
           })
       }, [id]);
@@ -107,12 +106,12 @@ const BoarUpdate = () =>{
     //function
     return (
         <div>
-            <h2>게시판 수정 : {id}</h2>
+            <h2>게시판 수정</h2>
             <TextField
                   autoFocus
                   id="standard-basic"
                   label="title"
-                  value={board.title}
+                  value={board.title|| ''}
                   fullWidth
                   onChange={titleChangeHandler}
                   margin="dense"
@@ -121,7 +120,7 @@ const BoarUpdate = () =>{
                   id="outlined-multiline-static"
                   label="content"
                   multiline
-                  value={board.content}
+                  value={board.content|| ''}
                   rows={6}
                   variant="outlined"
                   fullWidth
@@ -132,7 +131,7 @@ const BoarUpdate = () =>{
               board.imageName?
               board.imageName.map((name)=>{
                 return (
-                    <div>
+                    <div key={name}>
                         <Button startIcon={<Close/>} 
                         //   onClick={(e)=>deleteImage(board)}
                         >
