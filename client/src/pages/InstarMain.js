@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import CardView from '../components/CardView';
-import {firestore,sFirestore, storageService} from "../firebase";
+import {firestore, storageService} from "../firebase";
 import Add from '../components/Add';
 import {  useHistory,useRouteMatch } from 'react-router-dom';
 
 const dataSet =(doc)=>{
     let json={};
-    if(doc!=""){
+    if(doc!==""){
         json ={
             id:doc.id, 
             title:doc.data().title,
@@ -31,7 +31,6 @@ const dataSet =(doc)=>{
 
 const InstarMain = () =>{
     //변수
-    const [board, setBoard] = useState(dataSet(""));
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -94,6 +93,7 @@ const InstarMain = () =>{
                         break;
                 }
             })
+            return "";
         })
         firestore
         .collection("boards")
@@ -101,7 +101,7 @@ const InstarMain = () =>{
         .delete()
         .then(()=>{
             alert("삭제 했습니다.");
-            history.push("/instarMain")
+            history.go(0);
         })
     }
     const cardViewHandleClick = (event) => {
@@ -135,7 +135,7 @@ const InstarMain = () =>{
                 <>
                     <div>
                         {boards.map((board)=>(
-                        <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
+                            <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
                         ))}
                     </div>
                     <Add/>

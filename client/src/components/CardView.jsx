@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
@@ -80,8 +79,6 @@ const boardDateForm =(d)=>{
 
 export default function CardView({data,onChangeHandler,varCollection}) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  ////
   const [anchorEl, setAnchorEl] = React.useState(null);
   const cardViewHandleClick = (event) => {
       setAnchorEl(event.currentTarget);//button 그거 값임
@@ -91,34 +88,6 @@ export default function CardView({data,onChangeHandler,varCollection}) {
       setAnchorEl(null);
   };
 
-  let flag=false;
-  const handleChange = (panel) => (event, isExpanded) => {
-    console.log('panel',panel);
-    setExpanded(isExpanded ? panel : false);
-  };
-  ///
-  const menuCompo =(data)=>{
-    return (
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={cardViewHandleClose}
-      >
-        <MenuItem onClick={(e)=>{
-          return onChangeHandler.goUpdateHandle(data.id,e);
-        }}>
-          수정{data.id}
-        </MenuItem>
-        <MenuItem onClick={()=>{
-          return onChangeHandler.goDeleteHandle(data.id,data.imageName);
-        }}>
-          삭제
-        </MenuItem>
-      </Menu>
-    );
-  }
   return (
         <Card className={classes.root} key={data.id}>
           <CardHeader
@@ -130,13 +99,6 @@ export default function CardView({data,onChangeHandler,varCollection}) {
             action={
               <IconButton aria-label="settings" 
                 onClick={(e)=>{
-                  console.log('e',data.title);
-                
-                  // menuCompo(data);
-                  handleChange(data.id);
-                  flag = (expanded==data.id);
-                  // console.log('expanded',expanded);
-                  console.log('flag',flag);
                   return cardViewHandleClick(e);
                 }}
               >
@@ -151,7 +113,7 @@ export default function CardView({data,onChangeHandler,varCollection}) {
             {
               data.image.map((image)=>{
                 return(
-                  <img src={image} className={classes.media} key={image}/>
+                  <img src={image} alt={"img"} className={classes.media} key={image}/>
                 );
               })
             }
@@ -202,7 +164,6 @@ export default function CardView({data,onChangeHandler,varCollection}) {
                 </Grid>
             </Grid>
           </div>
-          {
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
@@ -213,7 +174,7 @@ export default function CardView({data,onChangeHandler,varCollection}) {
             <MenuItem onClick={(e)=>{
               return onChangeHandler.goUpdateHandle(data.id,e);
             }}>
-              수정{data.id}
+              수정
             </MenuItem>
             <MenuItem onClick={()=>{
               return onChangeHandler.goDeleteHandle(data.id,data.imageName);
@@ -221,8 +182,6 @@ export default function CardView({data,onChangeHandler,varCollection}) {
               삭제
             </MenuItem>
           </Menu>
-          
-          } 
         </Card>
   );
 }

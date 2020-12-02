@@ -31,7 +31,7 @@ function LinearProgressWithLabel(props) {
 
 const dataSet =(doc)=>{
     let json={};
-    if(doc!=""){
+    if(doc!==""){
         json ={
             id:doc.id, 
             title:doc.data().title,
@@ -72,7 +72,7 @@ const BoardAdd = () =>{
             if (user) {
               // User is signed in.
               console.log('user info',user.photoURL);
-            //   setBoard({...board, whose:user.displayName});
+              setBoard({whose:user.displayName});
             } else {
               // User is signed out.
               // ...
@@ -166,6 +166,7 @@ const BoardAdd = () =>{
                     }
                 );
                 ///////////////////
+                return "";
             });
             setTimeout(()=>{//이게 임시방편인데 리얼타임 이용하면 해결될듯
                 if(flag){

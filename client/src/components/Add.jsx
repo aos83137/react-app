@@ -1,15 +1,7 @@
 import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from '@material-ui/core/Fab';
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import {DropzoneArea} from 'material-ui-dropzone'
 import {  useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {

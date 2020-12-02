@@ -7,12 +7,12 @@ import {  useHistory,useParams } from 'react-router-dom';
 import Close from '@material-ui/icons/Close';
 
 //firebase
-import {firestore,sFirestore, storageService,authService} from "../firebase";
+import {firestore,authService} from "../firebase";
 //firebase 
 
 const dataSet =(doc)=>{
     let json={};
-    if(doc!=""){
+    if(doc!==""){
         json ={
             id:doc.id, 
             title:doc.data().title,
@@ -35,11 +35,9 @@ const dataSet =(doc)=>{
     return json;
 }
 
-const BoarUpdate = ({data}) =>{
+const BoarUpdate = () =>{
     //변수
     const [board, setBoard] = useState(dataSet(""));
-    const [progress, setProgress] = useState(0);
-    const [cnt, setCnt] = useState(0);
     let history = useHistory();
     let {id} = useParams();
     //변수
@@ -55,13 +53,14 @@ const BoarUpdate = ({data}) =>{
                 console.log(doc.data());
                 setBoard(dataSet(doc));
           })
-      }, []);
+      }, [id]);
+
     const authData = useCallback(()=>{
         authService.onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
               console.log('user info',user);
-              setBoard({...board, whose:user.displayName});
+              setBoard({whose:user.displayName});
             //   setAuth(user);//안필요할거같은데?,..
             } else {
               // User is signed out.
@@ -87,114 +86,23 @@ const BoarUpdate = ({data}) =>{
 
         setBoard({...board,content:e.target.value});
     };
-    const imageChangeHandler = (e) => {
-        // console.log('image',e.target.value);
-        console.log('e',e);
-        setCnt(e.length);
-        setBoard({...board,imageName:e});
-    };
-    const addButtonClickEvent=async(e)=>{
-        let start = 0;
-        console.log('board',board);
-        e.preventDefault();
-        let imageSet=[];
-        let nameSet =[];
-        let flag=false;
-        await board.imageName.map((file)=>{
-            console.log('imageName:',file);
-            let now=new Date();
-            let imageName = file.name.split('.')[0]+"_"+now.getTime()+"."+file.name.split('.')[1];
-            console.log(imageName);
-            //////////
-            const uploadTask = storageService.ref(`images/${imageName}`).put(file);
-            uploadTask.on(
-                "state_changed",
-                snapshot => {
-                  const progress = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                  );
-                  console.log('progress -',progress); // 잘되고
-                  setProgress(progress);
-                },
-                error => {
-                    // A full list of error codes is available at
-                    // https://firebase.google.com/docs/storage/web/handle-errors
-                    switch (error.code) {
-                        case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
-                        break;
-                    
-                        case 'storage/canceled':
-                        // User canceled the upload
-                        break;
-                                
-                        case 'storage/unknown':
-                        // Unknown error occurred, inspect error.serverResponse
-                        break;
-    
-                        default:
-                        break;
-                    }
-                },
-                () => {
-                    storageService
-                        .ref("images")
-                        .child(imageName)
-                        .getDownloadURL()
-                        .then(url => {
-                            console.log('fire stroe 넣음 - url: ',url);
-                            imageSet.push(url);
-                            nameSet.push(imageName);
-                            //이값을 리얼타임에 넣고 가져온다.
-                            console.log('imageSet',imageSet);
-                            console.log('cnt-',cnt,'start-',start);
-                            if(cnt>start+1){
-                                start++;
-                            }else{
-                                flag = true;
-                                console.log('flag',flag);
-                            }
-                        })
-                }
-              );
-            ///////////////////
-        });
-        // await alert("저장 완료");
-        // await history.push("/instarMain");
-        setTimeout(()=>{
-            if(flag){
-                console.log('imageSet',board);
-                console.log('imageSet',imageSet);
-                console.log('nameSet',nameSet);
-                if(board != ""){
-                    firestore
-                    .collection("boards")
-                    .add({
-                        title:board.title,
-                        image:imageSet,
-                        imageName:nameSet,
-                        content: board.content,
-                        whose:board.whose,
-                        timeCreated:sFirestore.Timestamp.fromDate(new Date())
-                    })
-                    .then((res)=>{
-                        console.log('잘되나ㅣ');
-                        alert('저장 완료');
-                        history.push('/instarMain');
-                    }).catch((e)=>{
-                        console.log('e',e);
-                    })
-                }
-            }else{
-                setTimeout(()=>{
-                    if(flag){
-                        console.log('imageSet',imageSet);
-                    }else{
-                        console.log("너무 느려서 안되네요 미안해요 ㅎㅎ;");
-                    }
-                })
-            }
-        },3000*cnt);
+
+    const modifyHandler=(id,data)=>{
+        console.log('check id,data : ', id,data);
+        if(data!==""){
+            firestore
+            .collection("boards")
+            .doc(id)
+            .update({
+                title:data.title,
+                content:data.content,
+            })
+            .then((res)=>{
+                alert('수정 되었습니다.');
+                history.goBack();
+            })
+            
+        }
     }
     //function
     return (
@@ -236,7 +144,9 @@ const BoarUpdate = ({data}) =>{
               
               :""
             }
-            <Button onClick={addButtonClickEvent}>
+            <Button onClick={()=>{
+                return modifyHandler(board.id,board)
+            }}>
                 +
             </Button>
         </div>

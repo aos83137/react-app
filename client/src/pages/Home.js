@@ -6,7 +6,7 @@ const Home =()=>{
         authService.onAuthStateChanged(function(user) {
             if (user) {
               // User is signed in.
-              setAuth(user.email.split("@")[0]);
+              setAuth(user.displayName);
             } else {
               // User is signed out.
               // ...
