@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import CardView from '../components/CardView';
-import {firestore, storageService} from "../firebase";
+import {firestore,authService, storageService} from "../firebase";
 import Add from '../components/Add';
 import {  useHistory,useRouteMatch } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ const dataSet =(doc)=>{
             content: doc.data().content,
             whose:doc.data().whose,
             timeCreated:doc.data().timeCreated,
+            comments:doc.data().comments,
         }
     }else(
         json ={
@@ -23,6 +24,7 @@ const dataSet =(doc)=>{
             imageName:"",
             content: "",
             whose:"",
+            comments:"",
         }
     )
     
@@ -31,6 +33,7 @@ const dataSet =(doc)=>{
 
 const InstarMain = () =>{
     //변수
+    const [auth, setAuth] = useState();
     const [boards, setBoards] = useState([]);
     const [loading, setLoading] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -57,15 +60,28 @@ const InstarMain = () =>{
                 })
                 setBoards(boardData);
                 setLoading(false);
-          })
-          .catch((e)=>{
-              console.log('데이터 없나봐요',e);
-              setLoading(true);
-          });
+            })
+            .catch((er)=>{
+                console.log('error 데이터 없엉',er);
+            })
+
       }, []);
+    const authData = useCallback(()=>{
+        authService.onAuthStateChanged(function(user) {
+            if (user) {
+              // User is signed in.
+              console.log('user info',user.photoURL);
+              setAuth(user);
+            } else {
+              // User is signed out.
+              // ...
+            }
+        });
+    },[]) 
     useEffect(() => {
         fetchData();
-        }, [fetchData]);
+        authData();
+        }, [fetchData,authData]);
     ///use Efect
 
 
@@ -135,7 +151,7 @@ const InstarMain = () =>{
                 <>
                     <div>
                         {boards.map((board)=>(
-                            <CardView data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
+                            <CardView auth={auth} data={board} key={board.id} onChangeHandler={onChangeHandler} varCollection={varCollection}/>
                         ))}
                     </div>
                     <Add/>

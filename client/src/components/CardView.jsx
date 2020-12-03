@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,11 +16,13 @@ import InputBase from '@material-ui/core/InputBase';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-
+import Close from '@material-ui/icons/Close';
 //
 import Carousel from 'nuka-carousel';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { firestore } from '../firebase';
+import {  useHistory } from 'react-router-dom';
 //
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: 614,
-    // paddingTop: '56.25%', // 16:9
+    paddingTop: '1%', // 16:9
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -62,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
     },
     grid:{
         flexGrow: 1,
+    },
+    commnet:{
+      columns:20
     }
 }));
 
@@ -77,19 +82,52 @@ const boardDateForm =(d)=>{
     return form;
 }
 
-export default function CardView({data,onChangeHandler,varCollection}) {
+export default function CardView({auth,data,onChangeHandler,varCollection}) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [commentInputField, setCommentInputField] = useState();
+  const history = useHistory();
   const cardViewHandleClick = (event) => {
       setAnchorEl(event.currentTarget);//button 그거 값임
   };
-
   const cardViewHandleClose = () => {
       setAnchorEl(null);
   };
 
+  const commentHandler=(e)=>{
+    console.log('comment',e.target.value);
+    setCommentInputField(e.target.value);
+  }
+  const addCommentButton=()=>{
+    let jsonComment = data.comments?data.comments:[];
+    jsonComment.push({user:auth.displayName,comment:commentInputField});
+    firestore
+    .collection("boards")
+    .doc(data.id)
+    .update({
+      comments:jsonComment
+    })
+    .then((res)=>{
+      history.push("/instarMain");
+    })
+  }
+  const removeCommentButton=(index)=>{
+    console.log(index);
+    let task = data.comments;
+    task.splice(index,1);
+    // console.log('data.comments',task);
+    firestore
+    .collection("boards")
+    .doc(data.id)
+    .update({
+      comment:task
+    }).then(()=>{
+      console.log('잘됨 ㅇㅇ');
+      history.push();
+    })
+  }
   return (
-        <Card className={classes.root} key={data.id}>
+        <Card className={classes.root} key={data}>
           <CardHeader
             avatar={
               <Avatar aria-label="recipe" className={classes.avatar}>
@@ -124,13 +162,31 @@ export default function CardView({data,onChangeHandler,varCollection}) {
               {data.content}
             </Typography>
             <Divider/>
-            <Typography display="inline" variant="caption" color="textSecondary" component="p">  
-                    {"사용자 "}
-                    {"좋아 보이네~~"}
-                </Typography>
-                <IconButton size={"small"} className={classes.rightSort}>
-                    <FavoriteIcon/>
-                </IconButton>   
+                    {data.comments?//댓글이 있을 시.
+                      data.comments.map((comment,index)=>{
+                        return (
+                        <div key={comment.comment} className={classes.grid}>
+                          <Grid container spacing={1}>
+                            <Grid item xs={11}>
+                              <Typography display="inline" variant="caption" color="textSecondary" component="p">  
+                                <strong>{comment.user}</strong>
+                                {" "}
+                                {comment.comment}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={1}>
+                              <IconButton size={"small"} className={classes.rightSort} onClick={()=>removeCommentButton(index)}>
+                                <Close/>
+                              </IconButton>   
+                            </Grid>
+                          </Grid>
+                        </div>
+                      )})
+                    :(//댓글 없을 시
+                      <Typography display="inline" variant="caption" color="textSecondary" component="p">  
+                          아직 댓글이 없어요...
+                      </Typography>
+                    )}
           </CardContent>
             
           <CardActions disableSpacing>
@@ -155,10 +211,11 @@ export default function CardView({data,onChangeHandler,varCollection}) {
                         placeholder="댓글 달기..." 
                         inputProps={{ 'aria-label': 'naked' }} 
                         className={classes.commentFont}
+                        onChange={commentHandler}
                     />
                 </Grid>
-                <Grid item xs>
-                    <Button className={classes.paper} >
+                <Grid item xs={1}>
+                    <Button className={classes.paper} onClick={addCommentButton} >
                         게시
                     </Button>
                 </Grid>

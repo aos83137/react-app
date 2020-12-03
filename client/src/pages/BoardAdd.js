@@ -40,6 +40,7 @@ const dataSet =(doc)=>{
             content: doc.data().content,
             whose:doc.data().whose,
             timeCreated:doc.data().timeCreated,
+            comments:doc.data().comments,
         }
     }else(
         json ={
@@ -48,6 +49,7 @@ const dataSet =(doc)=>{
             imageName:"",
             content: "",
             whose:"",
+            comments:"",
         }
     )
     
@@ -182,7 +184,8 @@ const BoardAdd = () =>{
                             imageName:nameSet,
                             content: board.content,
                             whose:board.whose,
-                            timeCreated:sFirestore.Timestamp.fromDate(new Date())
+                            timeCreated:sFirestore.Timestamp.fromDate(new Date()),
+                            comments:[],
                         })
                         .then((res)=>{
                             console.log('잘되나ㅣ');
