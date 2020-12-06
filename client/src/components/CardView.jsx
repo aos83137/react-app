@@ -126,6 +126,18 @@ export default function CardView({auth,data,onChangeHandler,varCollection}) {
       history.push();
     })
   }
+  const checkUserGet=(index,auth,userName)=>{
+
+    if(userName===auth.displayName){
+      return(
+        <IconButton size={"small"} className={classes.rightSort} onClick={()=>removeCommentButton(index)}>
+          <Close/>
+        </IconButton>   
+        );  
+      }else{
+        return ""; 
+      }
+    }
   return (
         <Card className={classes.root} key={data}>
           <CardHeader
@@ -135,13 +147,14 @@ export default function CardView({auth,data,onChangeHandler,varCollection}) {
               </Avatar>
             }
             action={
+              data.whose===auth.displayName?
               <IconButton aria-label="settings" 
                 onClick={(e)=>{
                   return cardViewHandleClick(e);
                 }}
               >
                 <MoreVertIcon />
-              </IconButton>
+              </IconButton>:""
             }
             title={data.title}
             subheader={boardDateForm(data.timeCreated.seconds*1000)}
@@ -175,9 +188,9 @@ export default function CardView({auth,data,onChangeHandler,varCollection}) {
                               </Typography>
                             </Grid>
                             <Grid item xs={1}>
-                              <IconButton size={"small"} className={classes.rightSort} onClick={()=>removeCommentButton(index)}>
-                                <Close/>
-                              </IconButton>   
+                              {
+                                checkUserGet(index,auth,comment.user)
+                              } 
                             </Grid>
                           </Grid>
                         </div>

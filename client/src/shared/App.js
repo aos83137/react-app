@@ -27,8 +27,8 @@ import {
     Link,
     useHistory
 } from 'react-router-dom';
-import {Home,Login,Board, InstarMain,BoardAdd,BoardUpdate} from '../pages';
-
+import {Home,Login, InstarMain,BoardAdd,BoardUpdate} from '../pages';
+import './App.css';
 // import { firestore } from "../firebase";
 
 const drawerWidth = 240;
@@ -161,9 +161,7 @@ export default function App() {
   function goHome() {
     history.push("/");
   }
-  const goBoard=()=>{
-  }
-
+ 
   return (
     loading?
       <div className={classes.root}>
@@ -187,7 +185,7 @@ export default function App() {
                   <MenuIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                  리엑트와 파이어베이스로 만드는 홈페이지
+                   Yong Home page
               </Typography>
               {
                 auth?
@@ -262,20 +260,12 @@ export default function App() {
                           <ListItemText primary={"홈"} />
                       </ListItem>
                   </Link>
-                  <Link to="/board" className={classes.linkType}>
-                      <ListItem button key={"게시판"} onClick={goBoard}>
-                          <ListItemIcon>
-                              <Icon>list_alt</Icon>
-                          </ListItemIcon>                
-                          <ListItemText primary={"게시판"} />
-                      </ListItem>
-                  </Link>
                   <Link to="/instarMain" className={classes.linkType}>
-                      <ListItem button key={"인스타"}>
+                      <ListItem button key={"글 등록"}>
                           <ListItemIcon>
                               <Icon>list_alt</Icon>
                           </ListItemIcon>                
-                          <ListItemText primary={"인스타"} />
+                          <ListItemText primary={"글 등록"} />
                       </ListItem>
                   </Link>
               </List>
@@ -306,7 +296,6 @@ export default function App() {
                     auth?
                     <React.Fragment>
                       <Route exact path="/" render={auth=>(<Home/>)}/>
-                      <Route path="/board" component={Board}/>
                       <Route exact path="/instarMain" component={InstarMain}/>
                       <Route exact path="/instarMain/create"component={BoardAdd}/>
                       <Route exact path="/instarMain/update/:id"component={BoardUpdate}/>

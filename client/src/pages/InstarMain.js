@@ -138,9 +138,9 @@ const InstarMain = () =>{
     });   
     //function
     return (
-        <div>
+        <div className="instarMain">
             <h2>
-                여기는 인스타
+                글 등록
             </h2>
             {
                 loading?
