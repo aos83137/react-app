@@ -79,13 +79,15 @@ const Login =()=>{
             //res.user.updateProfile을 이용해서 displayName등을 저장해줄 거임.
             //게시판 부분좀 만들고 이부분 회원가입 페이지 다시좀 만들어 보자구
             res.user.updateProfile({
-                displayName:"YongSEESEO",
+                displayName:"NoName"+Math.floor(Math.random()*1000),
                 photoURL:"https://example.com/jane-q-user/profile.jpg"
             }).then(function() {
             // Update successful.
             //
                 console.log('in Login res:',res.user.email);
                 console.log('in Login res.user.displayName:',res.user.displayName);
+                alert("회원가입 성공")
+                history.push("/");
             }).catch(function(error) {
             // An error happened.
             });
@@ -141,7 +143,6 @@ const Login =()=>{
                             variant="contained"
                             color="primary"
                             onClick={(e)=>{
-                                history.push("/");
                                 return goSignUpClick(email,password)
                             }}
                         >
@@ -173,8 +174,9 @@ const Login =()=>{
                         }}
                         // className={classes.googleButton}
                     >
-                        <img src={require('../static/images/google.jpg')} alt="google login"/>
-                        {"구글로그인입니당"}
+                        <img style={{ height:20,marginRight:10}}src={require('../static/images/google.png')} alt="google login"/>
+
+                        {"구글로그인"}
                     </Button>
                 </Grid>
             </Grid>

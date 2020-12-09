@@ -27,8 +27,7 @@ import {
     Link,
     useHistory
 } from 'react-router-dom';
-import {Home,Login, InstarMain,BoardAdd,BoardUpdate,CodingTest} from '../pages';
-import './App.css';
+import {Home,Login, InstarMain,BoardAdd,BoardUpdate} from '../pages';
 // import { firestore } from "../firebase";
 
 const drawerWidth = 240;
@@ -299,7 +298,6 @@ export default function App() {
                       <Route exact path="/instarMain" component={InstarMain}/>
                       <Route exact path="/instarMain/create"component={BoardAdd}/>
                       <Route exact path="/instarMain/update/:id"component={BoardUpdate}/>
-                      <Route exact path="/coding" component={CodingTest}/>
                       {/* <Redirect path="/login" to="/" /> */}
                     </React.Fragment>
                     :

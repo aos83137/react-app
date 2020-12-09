@@ -100,7 +100,12 @@ export default function CardView({auth,data,onChangeHandler,varCollection}) {
   }
   const addCommentButton=()=>{
     let jsonComment = data.comments?data.comments:[];
-    jsonComment.push({user:auth.displayName,comment:commentInputField});
+    jsonComment.push(
+      {
+        user:auth.displayName,
+        comment:commentInputField
+      }
+      );
     firestore
     .collection("boards")
     .doc(data.id)
